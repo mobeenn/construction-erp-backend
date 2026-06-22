@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
+const mongoose = require("mongoose");
 const dns = require("node:dns/promises");
 require("dotenv").config();
 
@@ -40,6 +41,12 @@ app.get("/", (req, res) => {
    res.status(200).json({
       success: true,
       message: "Construction ERP API Running",
+   });
+});
+// MongoDB Connection Status Endpoint
+app.get("/db-status", (req, res) => {
+   res.json({
+      readyState: mongoose.connection.readyState,
    });
 });
 
@@ -92,6 +99,7 @@ const reportRoutes = require("./src/routes/report.routes");
 app.use("/api/reports", reportRoutes);
 
 const profitLossRoutes = require("./src/routes/profitLoss.routes");
+const { default: mongoose } = require("mongoose");
 app.use("/api/profit-loss", profitLossRoutes);
 
 /*
