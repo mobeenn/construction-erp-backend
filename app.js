@@ -3,8 +3,9 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const dns = require("node:dns/promises");
+require("dotenv").config();
 
-const connectDB = require("./config/db");
+const connectDB = require("./src/config/db");
 
 const app = express();
 
@@ -48,49 +49,49 @@ app.get("/", (req, res) => {
 |--------------------------------------------------------------------------
 */
 
-const authRoutes = require("./routes/auth.routes");
+const authRoutes = require("./src/routes/auth.routes");
 app.use("/api/auth", authRoutes);
 
-const userRoutes = require("./routes/user.routes");
+const userRoutes = require("./src/routes/user.routes");
 app.use("/api/users", userRoutes);
 
-const employeeRoutes = require("./routes/employee.routes");
+const employeeRoutes = require("./src/routes/employee.routes");
 app.use("/api/employees", employeeRoutes);
 
-const attendanceRoutes = require("./routes/attendance.routes");
+const attendanceRoutes = require("./src/routes/attendance.routes");
 app.use("/api/attendance", attendanceRoutes);
 
-const projectRoutes = require("./routes/project.routes");
+const projectRoutes = require("./src/routes/project.routes");
 app.use("/api/projects", projectRoutes);
 
-const inventoryRoutes = require("./routes/inventory.routes");
+const inventoryRoutes = require("./src/routes/inventory.routes");
 app.use("/api/inventory", inventoryRoutes);
 
-const materialRequestRoutes = require("./routes/materialRequest.routes");
+const materialRequestRoutes = require("./src/routes/materialRequest.routes");
 app.use("/api/material-requests", materialRequestRoutes);
 
-const materialIssueRoutes = require("./routes/materialIssue.routes");
+const materialIssueRoutes = require("./src/routes/materialIssue.routes");
 app.use("/api/material-issues", materialIssueRoutes);
 
-const vendorRoutes = require("./routes/vendor.routes");
+const vendorRoutes = require("./src/routes/vendor.routes");
 app.use("/api/vendors", vendorRoutes);
 
-const purchaseOrderRoutes = require("./routes/purchaseOrder.routes");
+const purchaseOrderRoutes = require("./src/routes/purchaseOrder.routes");
 app.use("/api/purchase-orders", purchaseOrderRoutes);
 
-const grnRoutes = require("./routes/grn.routes");
+const grnRoutes = require("./src/routes/grn.routes");
 app.use("/api/grns", grnRoutes);
 
-const expenseRoutes = require("./routes/expense.routes");
+const expenseRoutes = require("./src/routes/expense.routes");
 app.use("/api/expenses", expenseRoutes);
 
-const dashboardRoutes = require("./routes/dashboard.routes");
+const dashboardRoutes = require("./src/routes/dashboard.routes");
 app.use("/api/dashboard", dashboardRoutes);
 
-const reportRoutes = require("./routes/report.routes");
+const reportRoutes = require("./src/routes/report.routes");
 app.use("/api/reports", reportRoutes);
 
-const profitLossRoutes = require("./routes/profitLoss.routes");
+const profitLossRoutes = require("./src/routes/profitLoss.routes");
 app.use("/api/profit-loss", profitLossRoutes);
 
 /*
@@ -125,8 +126,6 @@ app.use((err, req, res, next) => {
 | Start Server
 |--------------------------------------------------------------------------
 */
-
-require("dotenv").config();
 
 const PORT = process.env.PORT || 5000;
 
