@@ -190,8 +190,12 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-   console.log(`Server running on ${PORT}`);
-});
+// Only listen when run directly (local dev). On Vercel the exported
+// app is invoked serverless instead.
+if (require.main === module) {
+   app.listen(PORT, () => {
+      console.log(`Server running on ${PORT}`);
+   });
+}
 
 module.exports = app;

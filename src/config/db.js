@@ -5,9 +5,8 @@ const connectDB = async () => {
       load();
       console.log("JSON Database Connected (db.json)");
    } catch (error) {
-      console.log(error);
-
-      process.exit(1);
+      // Never kill the process (fatal on serverless) — routes will surface errors.
+      console.error("JSON Database failed to load:", error);
    }
 };
 

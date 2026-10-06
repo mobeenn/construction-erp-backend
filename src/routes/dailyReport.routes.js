@@ -7,8 +7,14 @@ const protect = require("../middlewares/auth.middleware");
 const authorize = require("../middlewares/role.middleware");
 const controller = require("../controllers/dailyReports/dailyReport.controller");
 
-const uploadDirectory = path.join(__dirname, "..", "..", "uploads", "daily-reports");
-fs.mkdirSync(uploadDirectory, { recursive: true });
+const uploadDirectory = process.env.VERCEL
+   ? path.join("/tmp", "uploads", "daily-reports")
+   : path.join(__dirname, "..", "..", "uploads", "daily-reports");
+try {
+   fs.mkdirSync(uploadDirectory, { recursive: true });
+} catch (error) {
+   console.error("Upload directory unavailable:", error.message);
+}
 const upload = multer({
    storage: multer.diskStorage({
       destination: uploadDirectory,

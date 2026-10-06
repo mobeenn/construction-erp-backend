@@ -81,7 +81,13 @@ const load = () => {
 };
 
 const persist = () => {
-   fs.writeFileSync(DB_PATH, JSON.stringify(cache, null, 2), "utf-8");
+   // Vercel's filesystem is read-only (except /tmp): never let a failed
+   // write crash a request — the in-memory cache keeps serving this instance.
+   try {
+      fs.writeFileSync(DB_PATH, JSON.stringify(cache, null, 2), "utf-8");
+   } catch (error) {
+      console.error("JSON DB persist skipped (read-only filesystem):", error.message);
+   }
 };
 
 const newId = () => crypto.randomBytes(12).toString("hex");

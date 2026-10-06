@@ -21,10 +21,16 @@ const {
    hardDelete,
 } = require("../controllers/documents/document.controller");
 
-// Configure multer storage
-const uploadDirectory = path.join(__dirname, "..", "..", "uploads", "documents");
-if (!fs.existsSync(uploadDirectory)) {
-   fs.mkdirSync(uploadDirectory, { recursive: true });
+// Configure multer storage (Vercel only allows writes under /tmp)
+const uploadDirectory = process.env.VERCEL
+   ? path.join("/tmp", "uploads", "documents")
+   : path.join(__dirname, "..", "..", "uploads", "documents");
+try {
+   if (!fs.existsSync(uploadDirectory)) {
+      fs.mkdirSync(uploadDirectory, { recursive: true });
+   }
+} catch (error) {
+   console.error("Upload directory unavailable:", error.message);
 }
 
 const storage = multer.diskStorage({
