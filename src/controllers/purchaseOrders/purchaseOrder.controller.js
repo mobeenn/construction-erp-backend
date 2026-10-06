@@ -5,6 +5,7 @@ const {
 } = require("../../validators/purchaseOrder.validation");
 
 const { createPO } = require("../../services/purchaseOrder.service");
+const { notifyPOReviewed } = require("../../services/notification.service");
 
 // Create PO
 
@@ -54,10 +55,16 @@ exports.getAll = async (req, res) => {
             createdAt: -1,
          });
 
+      const { project } = req.query;
+
+      const filtered = project
+         ? po.filter((p) => String(p.project?._id || p.project) === project)
+         : po;
+
       res.status(200).json({
          success: true,
 
-         data: po,
+         data: filtered,
       });
    } catch (error) {
       res.status(500).json({
@@ -83,6 +90,14 @@ exports.approve = async (req, res) => {
             new: true,
          },
       );
+
+      if (po) {
+         const populated = await PurchaseOrder.findById(po._id)
+            .populate("project", "name")
+            .populate("vendor", "companyName");
+
+         await notifyPOReviewed(populated, req.user._id).catch(() => {});
+      }
 
       res.status(200).json({
          success: true,

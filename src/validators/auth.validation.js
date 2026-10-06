@@ -13,7 +13,10 @@ exports.registerSchema = z.object({
       "accountant",
       "store_manager",
       "purchase_manager",
+      "project_manager",
       "site_supervisor",
+      "employee",
+      "management",
    ]),
 });
 

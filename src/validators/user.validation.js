@@ -16,8 +16,10 @@ exports.updateUserSchema = z.object({
          "store_manager",
 
          "purchase_manager",
-
+         "project_manager",
          "site_supervisor",
+         "employee",
+         "management",
       ])
       .optional(),
 

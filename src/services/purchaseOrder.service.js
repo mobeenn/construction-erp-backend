@@ -1,6 +1,7 @@
 const PurchaseOrder = require("../models/PurchaseOrder");
 
 const generatePoNumber = require("../utils/generatePoNumber");
+const { notifyPORequiresApproval } = require("./notification.service");
 
 exports.createPO = async (
    data,
@@ -18,12 +19,14 @@ exports.createPO = async (
          ...item,
 
          total,
+
+         receivedQty: 0,
       };
    });
 
    const poNumber = await generatePoNumber();
 
-   return await PurchaseOrder.create({
+   const po = await PurchaseOrder.create({
       ...data,
 
       poNumber,
@@ -33,5 +36,15 @@ exports.createPO = async (
       grandTotal,
 
       createdBy: userId,
+
+      requestedBy: data.requestedBy || userId,
    });
+
+   const populated = await PurchaseOrder.findById(po._id)
+      .populate("project", "name")
+      .populate("vendor", "companyName");
+
+   await notifyPORequiresApproval(populated, userId).catch(() => {});
+
+   return po;
 };

@@ -2,38 +2,44 @@ const Project = require("../models/Project");
 
 const Expense = require("../models/Expense");
 
+const PurchaseOrder = require("../models/PurchaseOrder");
+
 exports.calculateProfitLoss = async () => {
    const projects = await Project.find();
+
+   const expenses = await Expense.find();
+
+   const pos = await PurchaseOrder.find();
 
    const report = [];
 
    for (const project of projects) {
-      const expenses = await Expense.aggregate([
-         {
-            $match: {
-               project: project._id,
-            },
-         },
+      const projectExpenses = expenses.filter(
+         (e) => String(e.project) === String(project._id),
+      );
 
-         {
-            $group: {
-               _id: null,
+      const expenseTotal = projectExpenses.reduce(
+         (sum, e) => sum + e.amount,
+         0,
+      );
 
-               total: {
-                  $sum: "$amount",
-               },
-            },
-         },
-      ]);
+      // improved cost calculation: include delivered materials from POs
+      const materialCost = pos
+         .filter(
+            (p) =>
+               String(p.project) === String(project._id) &&
+               p.status === "delivered",
+         )
+         .reduce((sum, p) => sum + (p.grandTotal || 0), 0);
 
-      const totalExpense = expenses[0]?.total || 0;
+      const totalExpense = expenseTotal + materialCost;
 
-      const profit = project.receivedAmount - totalExpense;
+      const profit = (project.receivedAmount || 0) - totalExpense;
 
       report.push({
          projectName: project.name,
 
-         revenue: project.receivedAmount,
+         revenue: project.receivedAmount || 0,
 
          expense: totalExpense,
 
@@ -45,3 +51,4 @@ exports.calculateProfitLoss = async () => {
 
    return report;
 };
+

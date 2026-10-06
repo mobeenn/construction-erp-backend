@@ -1,82 +1,9 @@
-const mongoose = require("mongoose");
+const { model } = require("../config/jsonDb");
 
-const expenseSchema = new mongoose.Schema(
-   {
-      expenseNo: {
-         type: String,
-
-         unique: true,
-      },
-
-      project: {
-         type: mongoose.Schema.Types.ObjectId,
-
-         ref: "Project",
-
-         required: true,
-      },
-
-      category: {
-         type: String,
-
-         enum: [
-            "labour",
-
-            "fuel",
-
-            "equipment",
-
-            "office",
-
-            "transport",
-
-            "maintenance",
-
-            "other",
-         ],
-
-         required: true,
-      },
-
-      amount: {
-         type: Number,
-
-         required: true,
-      },
-
-      description: {
-         type: String,
-
-         required: true,
-      },
-
-      paymentMethod: {
-         type: String,
-
-         enum: ["cash", "bank", "cheque"],
-
-         default: "cash",
-      },
-
-      expenseDate: {
-         type: Date,
-
-         default: Date.now,
-      },
-
-      createdBy: {
-         type: mongoose.Schema.Types.ObjectId,
-
-         ref: "User",
-      },
+module.exports = model("expenses", {
+   defaults: {
+      paymentMethod: "cash",
+      expenseDate: () => new Date().toISOString(),
    },
-   {
-      timestamps: true,
-   },
-);
-
-module.exports = mongoose.model(
-   "Expense",
-
-   expenseSchema,
-);
+   refs: { project: "projects", createdBy: "users" },
+});

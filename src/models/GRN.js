@@ -1,60 +1,11 @@
-const mongoose = require("mongoose");
+const { model } = require("../config/jsonDb");
 
-const grnSchema = new mongoose.Schema(
-   {
-      grnNo: {
-         type: String,
-
-         unique: true,
-      },
-
-      purchaseOrder: {
-         type: mongoose.Schema.Types.ObjectId,
-
-         ref: "PurchaseOrder",
-
-         required: true,
-      },
-
-      vendor: {
-         type: mongoose.Schema.Types.ObjectId,
-
-         ref: "Vendor",
-
-         required: true,
-      },
-
-      project: {
-         type: mongoose.Schema.Types.ObjectId,
-
-         ref: "Project",
-
-         required: true,
-      },
-
-      receivedBy: {
-         type: mongoose.Schema.Types.ObjectId,
-
-         ref: "User",
-      },
-
-      items: [
-         {
-            materialName: String,
-
-            quantity: Number,
-         },
-      ],
-
-      remarks: String,
+module.exports = model("grns", {
+   defaults: {},
+   refs: {
+      purchaseOrder: "purchaseOrders",
+      vendor: "vendors",
+      project: "projects",
+      receivedBy: "users",
    },
-   {
-      timestamps: true,
-   },
-);
-
-module.exports = mongoose.model(
-   "GRN",
-
-   grnSchema,
-);
+});

@@ -1,0 +1,10 @@
+const express = require("express");
+const router = express.Router();
+const protect = require("../middlewares/auth.middleware");
+const authorize = require("../middlewares/role.middleware");
+const c = require("../controllers/progress/progress.controller");
+const { dashboard: getProgressDashboard } = require("../controllers/progress/progressDashboard.controller");
+router.get("/", protect, c.getAll);
+router.post("/", protect, authorize("admin", "site_supervisor"), c.create);
+router.get("/dashboard/:id", protect, getProgressDashboard);
+module.exports = router;

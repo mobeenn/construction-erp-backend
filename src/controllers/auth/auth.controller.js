@@ -10,6 +10,7 @@ const {
 } = require("../../validators/auth.validation");
 
 const { updateUserSchema } = require("../../validators/user.validation");
+const { getPolicies } = require("../../middlewares/permission.middleware");
 
 // Register
 
@@ -84,6 +85,7 @@ exports.login = async (req, res) => {
       }
 
       const token = generateToken(user._id);
+      const policies = await getPolicies();
 
       res.status(200).json({
          success: true,
@@ -98,6 +100,7 @@ exports.login = async (req, res) => {
             email: user.email,
 
             role: user.role,
+            permissions: user.role === "admin" ? policies.admin : user.permissions || policies[user.role] || {},
          },
       });
    } catch (error) {

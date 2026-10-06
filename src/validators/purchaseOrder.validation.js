@@ -5,6 +5,18 @@ exports.purchaseOrderSchema = z.object({
 
    project: z.string(),
 
+   site: z.string().optional(),
+
+   budgetCategory: z.string().optional(),
+
+   requestedBy: z.string().optional(),
+
+   deliveryLocation: z.string().optional(),
+
+   expectedDelivery: z.string().optional(),
+
+   paymentTerms: z.string().optional(),
+
    items: z.array(
       z.object({
          materialName: z.string(),

@@ -1,98 +1,16 @@
-const mongoose = require("mongoose");
+const { model } = require("../config/jsonDb");
 
-const employeeSchema = new mongoose.Schema(
-   {
-      employeeId: {
-         type: String,
-
-         unique: true,
-      },
-
-      name: {
-         type: String,
-
-         required: true,
-      },
-
-      cnic: {
-         type: String,
-
-         required: true,
-
-         unique: true,
-      },
-
-      phone: {
-         type: String,
-
-         required: true,
-      },
-
-      email: {
-         type: String,
-
-         default: null,
-      },
-
-      designation: {
-         type: String,
-
-         required: true,
-      },
-
-      salary: {
-         type: Number,
-
-         required: true,
-      },
-
-      assignedSite: {
-         type: String,
-
-         required: true,
-      },
-
-      joiningDate: {
-         type: Date,
-
-         default: Date.now,
-      },
-
-      status: {
-         type: String,
-
-         enum: ["active", "inactive"],
-
-         default: "active",
-      },
-
-      leaveBalance: {
-         type: Number,
-
-         default: 12,
-      },
-
-      performanceNotes: [
-         {
-            note: String,
-
-            createdAt: {
-               type: Date,
-
-               default: Date.now,
-            },
-         },
-      ],
-      assignedProject: {
-         type: mongoose.Schema.Types.ObjectId,
-
-         ref: "Project",
-         required: true,
-      },
+module.exports = model("employees", {
+   defaults: {
+      status: "active",
+      leaveBalance: 12,
+      joiningDate: () => new Date().toISOString(),
+      performanceNotes: [],
    },
-   {
-      timestamps: true,
+   refs: {
+      assignedProject: "projects",
+      department: "departments",
+      designationId: "designations",
+      userAccount: "users",
    },
-);
-
-module.exports = mongoose.model("Employee", employeeSchema);
+});

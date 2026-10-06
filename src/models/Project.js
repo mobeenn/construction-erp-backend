@@ -1,81 +1,22 @@
-const mongoose = require("mongoose");
+const { model } = require("../config/jsonDb");
 
-const projectSchema = new mongoose.Schema(
-   {
-      projectCode: {
-         type: String,
-
-         unique: true,
-      },
-
-      name: {
-         type: String,
-
-         required: true,
-      },
-
-      location: {
-         type: String,
-
-         required: true,
-      },
-
-      description: {
-         type: String,
-      },
-
-      budget: {
-         type: Number,
-
-         required: true,
-      },
-
-      startDate: {
-         type: Date,
-
-         required: true,
-      },
-
-      endDate: {
-         type: Date,
-      },
-
-      supervisor: {
-         type: mongoose.Schema.Types.ObjectId,
-
-         ref: "User",
-      },
-
-      status: {
-         type: String,
-
-         enum: ["planning", "active", "completed", "on_hold"],
-
-         default: "planning",
-      },
-
-      progress: {
-         type: Number,
-
-         default: 0,
-      },
-      contractValue: {
-         type: Number,
-         default: 0,
-      },
-
-      receivedAmount: {
-         type: Number,
-         default: 0,
-      },
+module.exports = model("projects", {
+   defaults: {
+      status: "planning",
+      priority: "medium",
+      progress: 0,
+      contractValue: 0,
+      budget: 0,
+      receivedAmount: 0,
+      engineers: [],
+      employees: [],
+      contractors: [],
    },
-   {
-      timestamps: true,
+   refs: {
+      supervisor: "users",
+      client: "clients",
+      contract: "contracts",
+      projectManager: "users",
+      siteSupervisor: "users",
    },
-);
-
-module.exports = mongoose.model(
-   "Project",
-
-   projectSchema,
-);
+});

@@ -46,10 +46,18 @@ exports.getAll = async (req, res) => {
             createdAt: -1,
          });
 
+      const { project } = req.query;
+
+      const filtered = project
+         ? expenses.filter(
+              (e) => String(e.project?._id || e.project) === project,
+           )
+         : expenses;
+
       res.status(200).json({
          success: true,
 
-         data: expenses,
+         data: filtered,
       });
    } catch (error) {
       res.status(500).json({

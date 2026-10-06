@@ -13,7 +13,7 @@ const {
    userStats,
 } = require("../controllers/users/user.controller");
 
-router.get("/", protect, authorize("admin"), getUsers);
+router.get("/", protect, authorize("admin", "hr"), getUsers);
 
 router.put("/:id", protect, authorize("admin"), updateUser);
 

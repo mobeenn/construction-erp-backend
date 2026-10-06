@@ -9,14 +9,20 @@ const authorize = require("../middlewares/role.middleware");
 const {
    create,
    getAll,
+   getOne,
    update,
    remove,
    updateRevenue,
+   dashboard,
 } = require("../controllers/projects/project.controller");
 
 router.post("/", protect, authorize("admin"), create);
 
 router.get("/", protect, getAll);
+
+router.get("/:id", protect, getOne);
+
+router.get("/:id/dashboard", protect, dashboard);
 
 router.put("/:id", protect, authorize("admin"), update);
 

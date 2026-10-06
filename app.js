@@ -2,17 +2,17 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
-// const mongoose = require("mongoose");
-const dns = require("node:dns/promises");
 require("dotenv").config();
 
 const connectDB = require("./src/config/db");
 
 const app = express();
 
-dns.setServers(["1.1.1.1", "1.0.0.1"]);
-
 connectDB();
+
+// Seed accounting data
+const seedAccounting = require("./src/seeds/accounting.seed");
+seedAccounting().catch(console.error);
 
 /*
 |--------------------------------------------------------------------------
@@ -43,10 +43,16 @@ app.get("/", (req, res) => {
       message: "Construction ERP API Running",
    });
 });
-// MongoDB Connection Status Endpoint
+// JSON Database Status Endpoint
 app.get("/db-status", (req, res) => {
+   const { load } = require("./src/config/jsonDb");
+   const db = load();
+
    res.json({
-      readyState: mongoose.connection.readyState,
+      success: true,
+      collections: Object.fromEntries(
+         Object.entries(db).map(([key, value]) => [key, value.length]),
+      ),
    });
 });
 
@@ -99,8 +105,55 @@ const reportRoutes = require("./src/routes/report.routes");
 app.use("/api/reports", reportRoutes);
 
 const profitLossRoutes = require("./src/routes/profitLoss.routes");
-const { default: mongoose } = require("mongoose");
 app.use("/api/profit-loss", profitLossRoutes);
+
+const clientRoutes = require("./src/routes/client.routes");
+app.use("/api/clients", clientRoutes);
+
+const contractRoutes = require("./src/routes/contract.routes");
+app.use("/api/contracts", contractRoutes);
+
+const activityRoutes = require("./src/routes/activity.routes");
+app.use("/api/activities", activityRoutes);
+
+const progressRoutes = require("./src/routes/progress.routes");
+app.use("/api/progress", progressRoutes);
+
+const interimPaymentRoutes = require("./src/routes/interimPayment.routes");
+app.use("/api/interim-payments", interimPaymentRoutes);
+
+const documentRoutes = require("./src/routes/document.routes");
+app.use("/api/documents", documentRoutes);
+
+const progressUpdateRoutes = require("./src/routes/progressUpdate.routes");
+app.use("/api/progress-updates", progressUpdateRoutes);
+
+const budgetRoutes = require("./src/routes/budget.routes");
+app.use("/api/budgets", budgetRoutes);
+
+const warehouseRoutes = require("./src/routes/warehouse.routes");
+app.use("/api/warehouses", warehouseRoutes);
+
+const rfqRoutes = require("./src/routes/rfq.routes");
+app.use("/api/rfqs", rfqRoutes);
+
+const quotationRoutes = require("./src/routes/quotation.routes");
+app.use("/api/quotations", quotationRoutes);
+
+const dailyReportRoutes = require("./src/routes/dailyReport.routes");
+app.use("/api/daily-reports", dailyReportRoutes);
+
+const hrRoutes = require("./src/routes/hr.routes");
+app.use("/api/hr", hrRoutes);
+
+const accountRoutes = require("./src/routes/account.routes");
+app.use("/api/accounts", accountRoutes);
+
+const notificationRoutes = require("./src/routes/notification.routes");
+app.use("/api/notifications", notificationRoutes);
+
+const permissionsRoutes = require("./src/routes/permissions.routes");
+app.use("/api/permissions", permissionsRoutes);
 
 /*
 |--------------------------------------------------------------------------

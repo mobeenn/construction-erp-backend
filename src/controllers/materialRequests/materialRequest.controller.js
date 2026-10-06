@@ -54,10 +54,18 @@ exports.getAll = async (req, res) => {
             "name",
          );
 
+      const { project } = req.query;
+
+      const filtered = project
+         ? requests.filter(
+              (r) => String(r.project?._id || r.project) === project,
+           )
+         : requests;
+
       res.status(200).json({
          success: true,
 
-         data: requests,
+         data: filtered,
       });
    } catch (error) {
       res.status(500).json({
@@ -76,6 +84,8 @@ exports.approve = async (req, res) => {
          req.params.id,
 
          "approved",
+
+         req.user._id,
       );
 
       res.status(200).json({
@@ -100,6 +110,8 @@ exports.reject = async (req, res) => {
          req.params.id,
 
          "rejected",
+
+         req.user._id,
       );
 
       res.status(200).json({

@@ -13,6 +13,10 @@ exports.create = async (req, res) => {
          data.remarks,
 
          req.user._id,
+
+         data.items,
+
+         data.allowOverReceive,
       );
 
       res.status(201).json({
@@ -21,7 +25,7 @@ exports.create = async (req, res) => {
          data: grn,
       });
    } catch (error) {
-      res.status(500).json({
+      res.status(400).json({
          success: false,
 
          message: error.message,
@@ -38,9 +42,17 @@ exports.getAll = async (req, res) => {
          .populate("project", "name")
          .sort({ createdAt: -1 });
 
+      const { project } = req.query;
+
+      const filtered = project
+         ? grns.filter(
+              (g) => String(g.project?._id || g.project) === project,
+           )
+         : grns;
+
       res.status(200).json({
          success: true,
-         data: grns,
+         data: filtered,
       });
    } catch (error) {
       res.status(500).json({
@@ -49,3 +61,4 @@ exports.getAll = async (req, res) => {
       });
    }
 };
+
