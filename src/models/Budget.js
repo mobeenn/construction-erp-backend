@@ -1,4 +1,4 @@
-const { model } = require("../config/jsonDb");
+const { model } = require("../config/pgDb");
 
 module.exports = model("budgets", {
    defaults: { status: "draft", version: 1, lines: [] },

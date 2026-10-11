@@ -43,17 +43,15 @@ app.get("/", (req, res) => {
       message: "Construction ERP API Running",
    });
 });
-// JSON Database Status Endpoint
-app.get("/db-status", (req, res) => {
-   const { load } = require("./src/config/jsonDb");
-   const db = load();
-
-   res.json({
-      success: true,
-      collections: Object.fromEntries(
-         Object.entries(db).map(([key, value]) => [key, value.length]),
-      ),
-   });
+// PostgreSQL status endpoint
+app.get("/db-status", async (req, res) => {
+   try {
+      const { getCollectionCounts } = require("./src/config/pgDb");
+      const collections = await getCollectionCounts();
+      res.json({ success: true, database: "postgresql", collections });
+   } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+   }
 });
 
 /*

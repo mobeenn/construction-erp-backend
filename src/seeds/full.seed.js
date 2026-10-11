@@ -1,20 +1,27 @@
-/* Full realistic seed — preserves users + accounting chart, rebuilds operational data. */
-const fs = require("fs");
-const path = require("path");
+/* Full realistic seed — preserves users + accounting chart, rebuilds operational data into PostgreSQL. */
+require("dotenv").config({ path: require("path").join(__dirname, "..", "..", ".env") });
 const crypto = require("crypto");
-
-const DB_PATH = path.join(__dirname, "..", "..", "db.json");
-const db = JSON.parse(fs.readFileSync(DB_PATH, "utf-8"));
+const { endPool } = require("../config/pool");
+const { fetchAll } = require("../config/pgDb");
+const { replaceMany } = require("../db/seedPersist");
 
 const nid = () => crypto.randomBytes(12).toString("hex");
 const now = () => new Date().toISOString();
 const iso = (s) => new Date(s).toISOString();
 const pick = (a, i) => a[i % a.length];
 
-const users = db.users;
-const accountCategories = db.accountCategories;
-const accounts = db.accounts;
-const U = (role) => users.find((u) => u.role === role)._id;
+async function main() {
+const users = await fetchAll("users");
+const accountCategories = await fetchAll("accountCategories");
+const accounts = await fetchAll("accounts");
+if (!users.length) {
+   throw new Error("No users in PostgreSQL. Run npm run db:migrate-json first.");
+}
+const U = (role) => {
+   const u = users.find((x) => x.role === role);
+   if (!u) throw new Error(`Missing user role: ${role}`);
+   return u._id;
+};
 const adminId = U("admin"), hrId = U("hr"), accId = U("accountant"),
    storeId = U("store_manager"), purchId = U("purchase_manager"), supId = U("site_supervisor");
 
@@ -499,8 +506,8 @@ const notifications = [
    { _id: nid(), user: adminId, title: "Daily report submitted", message: "Site supervisor submitted daily report", type: "info", isRead: false, project: projects[0]._id, dailyReport: dailyReports[0]._id, createdBy: supId, createdAt: now(), updatedAt: now() },
 ];
 
-/* ---------------- Write ---------------- */
-Object.assign(db, {
+/* ---------------- Write to PostgreSQL ---------------- */
+const payload = {
    clients, vendors, departments, designations, projects, contracts, warehouses,
    employees, attendance, activities, budgets, progressUpdates, progressReports,
    inventory, inventoryTransactions, materialRequests, materialIssues, materialReturns,
@@ -508,8 +515,17 @@ Object.assign(db, {
    expenses, interimPayments, customerPayments, vendorPayments, documents,
    dailyReports, leaveRequests, salaryStructures, payrollPeriods, payrollEntries,
    cashAccounts, bankAccounts, journalEntries, journalEntryLines, notifications,
-   permissionPolicies: db.permissionPolicies || [],
-});
-fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2), "utf-8");
-const counts = Object.fromEntries(Object.entries(db).map(([k, v]) => [k, Array.isArray(v) ? v.length : 0]));
-console.log("Seeded OK:", JSON.stringify(counts, null, 2));
+};
+await replaceMany(payload);
+const counts = Object.fromEntries(Object.entries(payload).map(([k, v]) => [k, v.length]));
+console.log("Seeded OK (PostgreSQL):", JSON.stringify(counts, null, 2));
+}
+
+main()
+   .then(() => endPool())
+   .then(() => process.exit(0))
+   .catch(async (err) => {
+      console.error(err);
+      try { await endPool(); } catch (_) {}
+      process.exit(1);
+   });

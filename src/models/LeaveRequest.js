@@ -1,4 +1,4 @@
-const { model } = require("../config/jsonDb");
+const { model } = require("../config/pgDb");
 
 module.exports = model("leaveRequests", {
    defaults: { status: "pending_manager", days: 0 },

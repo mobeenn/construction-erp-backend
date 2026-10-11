@@ -1,12 +1,13 @@
-const { load } = require("./jsonDb");
+const { getPool } = require("./pool");
 
 const connectDB = async () => {
    try {
-      load();
-      console.log("JSON Database Connected (db.json)");
+      const pool = getPool();
+      await pool.query("SELECT 1");
+      console.log("PostgreSQL Connected");
    } catch (error) {
       // Never kill the process (fatal on serverless) — routes will surface errors.
-      console.error("JSON Database failed to load:", error);
+      console.error("PostgreSQL connection failed:", error.message);
    }
 };
 

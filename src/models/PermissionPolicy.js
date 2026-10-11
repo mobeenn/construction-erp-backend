@@ -1,3 +1,3 @@
-const { model } = require("../config/jsonDb");
+const { model } = require("../config/pgDb");
 
 module.exports = model("permissionPolicies", { defaults: {}, refs: { updatedBy: "users" } });

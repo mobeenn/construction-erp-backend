@@ -8,11 +8,11 @@
       "exceljs": "^4.4.0",
       "express": "^5.2.1",
       "jsonwebtoken": "^9.0.3",
-      "mongoose": "^9.7.1",
       "morgan": "^1.11.0",
       "multer": "^2.2.0",
       "nodemailer": "^9.0.1",
       "pdfkit": "^0.19.1",
+      "pg": "^8.23.1",
       "validator": "^13.15.35",
       "zod": "^4.4.3"
    },
@@ -25,7 +25,17 @@
    },
    "scripts": {
       "start": "node app.js",
-      "dev": "nodemon app.js"
+      "dev": "nodemon app.js",
+      "db:test": "node scripts/test-db.js",
+      "db:schema": "node scripts/apply-schema.js",
+      "db:schema:relational": "node scripts/generate-relational-schema.js",
+      "db:migrate-json": "node scripts/migrate-dbjson.js",
+      "db:normalize": "node scripts/normalize-relational.js",
+      "db:normalize:verify": "node scripts/verify-relational.js",
+      "db:verify": "node scripts/verify-relational.js",
+      "seed:accounting": "node -e \"require('./src/seeds/accounting.seed')().then(()=>process.exit(0)).catch(e=>{console.error(e);process.exit(1)})\"",
+      "seed:full": "node src/seeds/full.seed.js",
+      "seed:topup": "node src/seeds/project-details.topup.js"
    },
    "keywords": [],
    "author": "",

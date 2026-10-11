@@ -1,10 +1,9 @@
-/* Top-up seed: richer per-project detail data (appends only, no rebuild). */
-const fs = require("fs");
-const path = require("path");
+/* Top-up seed: richer per-project detail data (appends only, no rebuild) — PostgreSQL. */
+require("dotenv").config({ path: require("path").join(__dirname, "..", "..", ".env") });
 const crypto = require("crypto");
-
-const DB_PATH = path.join(__dirname, "..", "..", "db.json");
-const db = JSON.parse(fs.readFileSync(DB_PATH, "utf-8"));
+const { endPool } = require("../config/pool");
+const { fetchAll } = require("../config/pgDb");
+const { upsertCollection } = require("../db/seedPersist");
 
 const nid = () => crypto.randomBytes(12).toString("hex");
 const now = () => new Date().toISOString();
@@ -14,6 +13,21 @@ const isoDay = (offset) => {
    return d.toISOString().slice(0, 10);
 };
 const idOf = (v) => String(v?._id || v || "");
+
+async function main() {
+const db = {
+   users: await fetchAll("users"),
+   projects: await fetchAll("projects"),
+   activities: await fetchAll("activities"),
+   employees: await fetchAll("employees"),
+   inventory: await fetchAll("inventory"),
+   dailyReports: await fetchAll("dailyReports"),
+   documents: await fetchAll("documents"),
+   progressUpdates: await fetchAll("progressUpdates"),
+   expenses: await fetchAll("expenses"),
+   materialRequests: await fetchAll("materialRequests"),
+   materialIssues: await fetchAll("materialIssues"),
+};
 const before = [];
 const countBefore = {};
 ["dailyReports", "documents", "progressUpdates", "activities", "expenses", "materialRequests", "materialIssues"].forEach((k) => {
@@ -33,6 +47,25 @@ const actNo = db.activities.length;
 const expNo = db.expenses.length;
 const reqNo = db.materialRequests.length;
 const issNo = db.materialIssues.length;
+
+const added = {
+   dailyReports: [],
+   documents: [],
+   progressUpdates: [],
+   activities: [],
+   expenses: [],
+   materialRequests: [],
+   materialIssues: [],
+};
+// Capture newly pushed docs for upsert
+["dailyReports", "documents", "progressUpdates", "activities", "expenses", "materialRequests", "materialIssues"].forEach((k) => {
+   const arr = db[k];
+   const origPush = arr.push.bind(arr);
+   arr.push = (...items) => {
+      items.forEach((item) => added[k].push(item));
+      return origPush(...items);
+   };
+});
 
 /* ---------------- Daily reports: 2 more per project ---------------- */
 const weathers = ["Sunny", "Cloudy", "Hot", "Windy"];
@@ -163,6 +196,18 @@ projects.forEach((p, pi) => {
    });
 });
 
-fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2), "utf-8");
-console.log("Top-up OK:");
+for (const k of before) {
+   await upsertCollection(k, added[k]);
+}
+console.log("Top-up OK (PostgreSQL):");
 before.forEach((k) => console.log(` ${k}: ${countBefore[k]} -> ${db[k].length}`));
+}
+
+main()
+   .then(() => endPool())
+   .then(() => process.exit(0))
+   .catch(async (err) => {
+      console.error(err);
+      try { await endPool(); } catch (_) {}
+      process.exit(1);
+   });

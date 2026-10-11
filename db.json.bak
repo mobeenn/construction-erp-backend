@@ -1,0 +1,1627 @@
+{
+  "users": [
+    {
+      "_id": "64b7f00000000000000000a1",
+      "name": "Admin User",
+      "email": "admin@erp.com",
+      "password": "$2b$10$Xi2KPeTAFDudPMz6rBMWtezv34N2MVQ8599rSanknHIOo/8G4/LNq",
+      "role": "admin",
+      "isActive": true,
+      "createdAt": "2026-09-01T09:00:00.000Z",
+      "updatedAt": "2026-09-01T09:00:00.000Z"
+    },
+    {
+      "_id": "64b7f00000000000000000a2",
+      "name": "HR Manager",
+      "email": "hr@erp.com",
+      "password": "$2b$10$Xi2KPeTAFDudPMz6rBMWtezv34N2MVQ8599rSanknHIOo/8G4/LNq",
+      "role": "hr",
+      "isActive": true,
+      "createdAt": "2026-09-01T09:05:00.000Z",
+      "updatedAt": "2026-09-01T09:05:00.000Z"
+    },
+    {
+      "_id": "64b7f00000000000000000a3",
+      "name": "Accountant User",
+      "email": "accountant@erp.com",
+      "password": "$2b$10$Xi2KPeTAFDudPMz6rBMWtezv34N2MVQ8599rSanknHIOo/8G4/LNq",
+      "role": "accountant",
+      "isActive": true,
+      "createdAt": "2026-09-01T09:10:00.000Z",
+      "updatedAt": "2026-09-01T09:10:00.000Z"
+    },
+    {
+      "_id": "64b7f00000000000000000a4",
+      "name": "Store Manager",
+      "email": "store@erp.com",
+      "password": "$2b$10$Xi2KPeTAFDudPMz6rBMWtezv34N2MVQ8599rSanknHIOo/8G4/LNq",
+      "role": "store_manager",
+      "isActive": true,
+      "createdAt": "2026-09-01T09:15:00.000Z",
+      "updatedAt": "2026-09-01T09:15:00.000Z"
+    },
+    {
+      "_id": "64b7f00000000000000000a5",
+      "name": "Purchase Manager",
+      "email": "purchase@erp.com",
+      "password": "$2b$10$Xi2KPeTAFDudPMz6rBMWtezv34N2MVQ8599rSanknHIOo/8G4/LNq",
+      "role": "purchase_manager",
+      "isActive": true,
+      "createdAt": "2026-09-01T09:20:00.000Z",
+      "updatedAt": "2026-09-01T09:20:00.000Z"
+    },
+    {
+      "_id": "64b7f00000000000000000a6",
+      "name": "Site Supervisor",
+      "email": "supervisor@erp.com",
+      "password": "$2b$10$Xi2KPeTAFDudPMz6rBMWtezv34N2MVQ8599rSanknHIOo/8G4/LNq",
+      "role": "site_supervisor",
+      "isActive": true,
+      "createdAt": "2026-09-01T09:25:00.000Z",
+      "updatedAt": "2026-09-01T09:25:00.000Z"
+    }
+  ],
+  "projects": [
+    {
+      "_id": "64b7f00000000000000000b01",
+      "projectCode": "PRJ-0001",
+      "name": "Green Valley Apartments",
+      "location": "Lahore",
+      "description": "10-story residential complex",
+      "budget": 50000000,
+      "startDate": "2026-08-01",
+      "endDate": "2027-08-01",
+      "supervisor": "64b7f00000000000000000a6",
+      "status": "in_progress",
+      "progress": 55,
+      "contractValue": 48000000,
+      "receivedAmount": 12000000,
+      "createdAt": "2026-08-01T10:00:00.000Z",
+      "updatedAt": "2026-10-05T14:10:21.330Z",
+      "priority": "medium",
+      "actualEndDate": null,
+      "projectManager": "64b7f00000000000000000a6",
+      "siteSupervisor": "64b7f00000000000000000a6",
+      "engineers": [],
+      "employees": [],
+      "contractors": [],
+      "client": "64b7f00000000000000002001",
+      "contract": "64b7f00000000000000003001"
+    },
+    {
+      "_id": "64b7f00000000000000000b02",
+      "projectCode": "PRJ-0002",
+      "name": "City Mall Plaza",
+      "location": "Karachi",
+      "description": "Commercial shopping mall",
+      "budget": 80000000,
+      "startDate": "2026-06-15",
+      "endDate": "2027-12-31",
+      "supervisor": "64b7f00000000000000000a6",
+      "status": "in_progress",
+      "progress": 20,
+      "contractValue": 75000000,
+      "receivedAmount": 5000000,
+      "createdAt": "2026-06-15T10:00:00.000Z",
+      "updatedAt": "2026-06-15T10:00:00.000Z",
+      "priority": "medium",
+      "actualEndDate": null,
+      "projectManager": "64b7f00000000000000000a6",
+      "siteSupervisor": "64b7f00000000000000000a6",
+      "engineers": [],
+      "employees": [],
+      "contractors": [],
+      "client": null,
+      "contract": null
+    },
+    {
+      "_id": "64b7f00000000000000000b03",
+      "projectCode": "PRJ-0003",
+      "name": "Office Tower Blue",
+      "location": "Islamabad",
+      "description": "Corporate office tower",
+      "budget": 30000000,
+      "startDate": "2026-11-01",
+      "supervisor": "64b7f00000000000000000a6",
+      "status": "planning",
+      "progress": 0,
+      "contractValue": 28000000,
+      "receivedAmount": 0,
+      "createdAt": "2026-09-20T10:00:00.000Z",
+      "updatedAt": "2026-10-05T22:06:30.200Z",
+      "priority": "medium",
+      "actualEndDate": null,
+      "projectManager": "64b7f00000000000000000a6",
+      "siteSupervisor": "64b7f00000000000000000a6",
+      "engineers": [],
+      "employees": [],
+      "contractors": [],
+      "client": null,
+      "contract": null
+    }
+  ],
+  "employees": [
+    {
+      "_id": "64b7f00000000000000000c01",
+      "employeeId": "EMP-0001",
+      "name": "Ahmed Khan",
+      "cnic": "35201-1234567-1",
+      "phone": "03001234567",
+      "email": "ahmed@example.com",
+      "designation": "Civil Engineer",
+      "salary": 80000,
+      "assignedSite": "Lahore Site",
+      "joiningDate": "2026-01-15",
+      "status": "active",
+      "leaveBalance": 12,
+      "performanceNotes": [],
+      "assignedProject": "64b7f00000000000000000b01",
+      "createdAt": "2026-01-15T09:00:00.000Z",
+      "updatedAt": "2026-01-15T09:00:00.000Z"
+    },
+    {
+      "_id": "64b7f00000000000000000c02",
+      "employeeId": "EMP-0002",
+      "name": "Sara Ali",
+      "cnic": "42101-7654321-2",
+      "phone": "03111234567",
+      "email": "sara@example.com",
+      "designation": "Foreman",
+      "salary": 60000,
+      "assignedSite": "Karachi Site",
+      "joiningDate": "2026-02-01",
+      "status": "active",
+      "leaveBalance": 10,
+      "performanceNotes": [],
+      "assignedProject": "64b7f00000000000000000b02",
+      "createdAt": "2026-02-01T09:00:00.000Z",
+      "updatedAt": "2026-02-01T09:00:00.000Z"
+    },
+    {
+      "_id": "64b7f00000000000000000c03",
+      "employeeId": "EMP-0003",
+      "name": "Usman Tariq",
+      "cnic": "33100-9876543-3",
+      "phone": "03211234567",
+      "email": "usman@example.com",
+      "designation": "Mason",
+      "salary": 40000,
+      "assignedSite": "Lahore Site",
+      "joiningDate": "2026-03-10",
+      "status": "active",
+      "leaveBalance": 15,
+      "performanceNotes": [],
+      "assignedProject": "64b7f00000000000000000b01",
+      "createdAt": "2026-03-10T09:00:00.000Z",
+      "updatedAt": "2026-03-10T09:00:00.000Z"
+    },
+    {
+      "_id": "64b7f00000000000000000c04",
+      "employeeId": "EMP-0004",
+      "name": "Bilal Shah",
+      "cnic": "42201-5555555-4",
+      "phone": "03331234567",
+      "email": "bilal@example.com",
+      "designation": "Electrician",
+      "salary": 45000,
+      "assignedSite": "Karachi Site",
+      "joiningDate": "2026-04-05",
+      "status": "inactive",
+      "leaveBalance": 8,
+      "performanceNotes": [],
+      "assignedProject": "64b7f00000000000000000b02",
+      "createdAt": "2026-04-05T09:00:00.000Z",
+      "updatedAt": "2026-04-05T09:00:00.000Z"
+    }
+  ],
+  "vendors": [
+    {
+      "_id": "64b7f00000000000000000d01",
+      "vendorCode": "VND-0001",
+      "companyName": "ABC Cement Suppliers",
+      "contactPerson": "Imran Butt",
+      "phone": "042-1112223",
+      "email": "sales@abccement.com",
+      "address": "Lahore",
+      "status": "active",
+      "createdAt": "2026-06-01T10:00:00.000Z",
+      "updatedAt": "2026-06-01T10:00:00.000Z"
+    },
+    {
+      "_id": "64b7f00000000000000000d02",
+      "vendorCode": "VND-0002",
+      "companyName": "Steel Works Pak",
+      "contactPerson": "Tariq Mehmood",
+      "phone": "021-3334445",
+      "email": "info@steelworks.com",
+      "address": "Karachi",
+      "status": "active",
+      "createdAt": "2026-06-02T10:00:00.000Z",
+      "updatedAt": "2026-06-02T10:00:00.000Z"
+    },
+    {
+      "_id": "64b7f00000000000000000d03",
+      "vendorCode": "VND-0003",
+      "companyName": "Fine Aggregates Co.",
+      "contactPerson": "Nadeem Aslam",
+      "phone": "051-5556667",
+      "email": "contact@fineagg.com",
+      "address": "Rawalpindi",
+      "status": "inactive",
+      "createdAt": "2026-06-03T10:00:00.000Z",
+      "updatedAt": "2026-06-03T10:00:00.000Z"
+    }
+  ],
+  "purchaseOrders": [
+    {
+      "_id": "64b7f00000000000000000e01",
+      "poNumber": "PO-0001",
+      "vendor": "64b7f00000000000000000d01",
+      "project": "64b7f00000000000000000b01",
+      "createdBy": "64b7f00000000000000000a5",
+      "items": [
+        {
+          "materialName": "Cement",
+          "quantity": 500,
+          "unitPrice": 1400,
+          "total": 700000,
+          "receivedQty": 500
+        }
+      ],
+      "grandTotal": 700000,
+      "status": "delivered",
+      "createdAt": "2026-09-05T10:00:00.000Z",
+      "updatedAt": "2026-09-10T10:00:00.000Z",
+      "site": "",
+      "budgetCategory": "materials",
+      "requestedBy": "64b7f00000000000000000a5",
+      "approvedBy": "",
+      "deliveryLocation": "",
+      "expectedDelivery": "",
+      "paymentTerms": ""
+    },
+    {
+      "_id": "64b7f00000000000000000e02",
+      "poNumber": "PO-0002",
+      "vendor": "64b7f00000000000000000d02",
+      "project": "64b7f00000000000000000b02",
+      "createdBy": "64b7f00000000000000000a5",
+      "items": [
+        {
+          "materialName": "Steel Bars",
+          "quantity": 20,
+          "unitPrice": 250000,
+          "total": 5000000,
+          "receivedQty": 25
+        }
+      ],
+      "grandTotal": 5000000,
+      "status": "delivered",
+      "createdAt": "2026-09-25T10:00:00.000Z",
+      "updatedAt": "2026-10-05T14:41:06.723Z",
+      "site": "",
+      "budgetCategory": "materials",
+      "requestedBy": "64b7f00000000000000000a5",
+      "approvedBy": "",
+      "deliveryLocation": "",
+      "expectedDelivery": "",
+      "paymentTerms": ""
+    },
+    {
+      "_id": "64b7f00000000000000000e03",
+      "poNumber": "PO-0003",
+      "vendor": "64b7f00000000000000000d01",
+      "project": "64b7f00000000000000000b01",
+      "createdBy": "64b7f00000000000000000a5",
+      "items": [
+        {
+          "materialName": "Sand",
+          "quantity": 100,
+          "unitPrice": 3000,
+          "total": 300000,
+          "receivedQty": 0
+        }
+      ],
+      "grandTotal": 300000,
+      "status": "draft",
+      "createdAt": "2026-10-01T10:00:00.000Z",
+      "updatedAt": "2026-10-01T10:00:00.000Z",
+      "site": "",
+      "budgetCategory": "materials",
+      "requestedBy": "64b7f00000000000000000a5",
+      "approvedBy": "",
+      "deliveryLocation": "",
+      "expectedDelivery": "",
+      "paymentTerms": ""
+    },
+    {
+      "vendor": "",
+      "project": "",
+      "items": [
+        {
+          "materialName": "",
+          "quantity": 0,
+          "unitPrice": 0,
+          "total": 0,
+          "receivedQty": 0
+        },
+        {
+          "materialName": "",
+          "quantity": 0,
+          "unitPrice": 0,
+          "total": 0,
+          "receivedQty": 0
+        }
+      ],
+      "poNumber": "PO-0004",
+      "grandTotal": 0,
+      "createdBy": "64b7f00000000000000000a1",
+      "requestedBy": "64b7f00000000000000000a1",
+      "status": "approved",
+      "_id": "4d10236a7f569b8eb24b5e16",
+      "createdAt": "2026-10-05T19:36:44.522Z",
+      "updatedAt": "2026-10-05T22:02:57.498Z"
+    }
+  ],
+  "grns": [
+    {
+      "_id": "64b7f00000000000000000f01",
+      "grnNo": "GRN-0001",
+      "purchaseOrder": "64b7f00000000000000000e01",
+      "vendor": "64b7f00000000000000000d01",
+      "project": "64b7f00000000000000000b01",
+      "receivedBy": "64b7f00000000000000000a4",
+      "items": [
+        {
+          "materialName": "Cement",
+          "quantity": 500,
+          "orderedQty": 500,
+          "receivedQty": 500
+        }
+      ],
+      "remarks": "Received in good condition",
+      "createdAt": "2026-09-10T10:00:00.000Z",
+      "updatedAt": "2026-09-10T10:00:00.000Z"
+    },
+    {
+      "grnNo": "GRN-0002",
+      "purchaseOrder": "64b7f00000000000000000e02",
+      "vendor": "64b7f00000000000000000d02",
+      "project": "64b7f00000000000000000b02",
+      "receivedBy": "64b7f00000000000000000a1",
+      "items": [
+        {
+          "materialName": "Steel Bars",
+          "quantity": 5,
+          "receivedQty": 5
+        }
+      ],
+      "remarks": "Partial",
+      "_id": "813a2cbc9591828145a9d4a3",
+      "createdAt": "2026-10-05T14:41:06.674Z",
+      "updatedAt": "2026-10-05T14:41:06.674Z"
+    },
+    {
+      "grnNo": "GRN-0003",
+      "purchaseOrder": "64b7f00000000000000000e02",
+      "vendor": "64b7f00000000000000000d02",
+      "project": "64b7f00000000000000000b02",
+      "receivedBy": "64b7f00000000000000000a1",
+      "items": [
+        {
+          "materialName": "Steel Bars",
+          "quantity": 20,
+          "receivedQty": 20
+        }
+      ],
+      "_id": "b8b71c91d4504ad404f08096",
+      "createdAt": "2026-10-05T14:41:06.726Z",
+      "updatedAt": "2026-10-05T14:41:06.726Z"
+    }
+  ],
+  "inventory": [
+    {
+      "_id": "64b7f00000000000000001001",
+      "project": "64b7f00000000000000000b01",
+      "materialName": "Cement",
+      "category": "Construction",
+      "unit": "bags",
+      "currentStock": 341,
+      "minimumStock": 100,
+      "unitPrice": 1400,
+      "createdAt": "2026-09-10T10:05:00.000Z",
+      "updatedAt": "2026-10-05T14:51:05.990Z",
+      "warehouse": "",
+      "openingQuantity": 350,
+      "receivedQuantity": 3,
+      "issuedQuantity": 0,
+      "transferredQuantity": 10,
+      "reorderLevel": 100
+    },
+    {
+      "_id": "64b7f00000000000000001002",
+      "project": "64b7f00000000000000000b01",
+      "materialName": "Steel Bars",
+      "category": "Construction",
+      "unit": "tons",
+      "currentStock": 18,
+      "minimumStock": 5,
+      "unitPrice": 250000,
+      "createdAt": "2026-09-10T10:10:00.000Z",
+      "updatedAt": "2026-09-28T10:00:00.000Z",
+      "warehouse": "",
+      "openingQuantity": 18,
+      "receivedQuantity": 0,
+      "issuedQuantity": 0,
+      "transferredQuantity": 0,
+      "reorderLevel": 5
+    },
+    {
+      "_id": "64b7f00000000000000001003",
+      "project": "64b7f00000000000000000b02",
+      "materialName": "Fine Aggregates",
+      "category": "Construction",
+      "unit": "tons",
+      "currentStock": 60,
+      "minimumStock": 20,
+      "unitPrice": 3000,
+      "createdAt": "2026-09-12T10:00:00.000Z",
+      "updatedAt": "2026-09-12T10:00:00.000Z",
+      "warehouse": "",
+      "openingQuantity": 60,
+      "receivedQuantity": 0,
+      "issuedQuantity": 0,
+      "transferredQuantity": 0,
+      "reorderLevel": 20
+    },
+    {
+      "project": "64b7f00000000000000000b01",
+      "warehouse": "2e59ece729a5619998636e85",
+      "materialName": "Cement",
+      "category": "Construction",
+      "unit": "bags",
+      "currentStock": 10,
+      "minimumStock": 100,
+      "reorderLevel": 100,
+      "unitPrice": 1400,
+      "openingQuantity": 0,
+      "receivedQuantity": 10,
+      "issuedQuantity": 0,
+      "transferredQuantity": 0,
+      "_id": "e7fa9e840eff05c14643fd73",
+      "createdAt": "2026-10-05T14:51:05.940Z",
+      "updatedAt": "2026-10-05T14:51:05.942Z"
+    }
+  ],
+  "inventoryTransactions": [
+    {
+      "_id": "64b7f00000000000000001101",
+      "inventory": "64b7f00000000000000001001",
+      "project": "64b7f00000000000000000b01",
+      "type": "stock_in",
+      "quantity": 500,
+      "remarks": "GRN stock received",
+      "createdBy": "64b7f00000000000000000a4",
+      "createdAt": "2026-09-10T10:05:00.000Z",
+      "updatedAt": "2026-09-10T10:05:00.000Z"
+    },
+    {
+      "_id": "64b7f00000000000000001102",
+      "inventory": "64b7f00000000000000001001",
+      "project": "64b7f00000000000000000b01",
+      "type": "stock_out",
+      "quantity": 150,
+      "remarks": "Material issued",
+      "createdBy": "64b7f00000000000000000a4",
+      "createdAt": "2026-10-01T10:00:00.000Z",
+      "updatedAt": "2026-10-01T10:00:00.000Z"
+    },
+    {
+      "inventory": "64b7f00000000000000001001",
+      "project": "64b7f00000000000000000b01",
+      "warehouse": "",
+      "type": "stock_out",
+      "quantity": 10,
+      "remarks": "Transfer to warehouse",
+      "balanceAfter": 340,
+      "createdBy": "64b7f00000000000000000a1",
+      "_id": "e62e4eb2f546909c4b3aa37f",
+      "createdAt": "2026-10-05T14:51:05.943Z",
+      "updatedAt": "2026-10-05T14:51:05.943Z"
+    },
+    {
+      "inventory": "e7fa9e840eff05c14643fd73",
+      "project": "64b7f00000000000000000b01",
+      "warehouse": "2e59ece729a5619998636e85",
+      "type": "stock_in",
+      "quantity": 10,
+      "remarks": "Transfer from warehouse",
+      "balanceAfter": 10,
+      "createdBy": "64b7f00000000000000000a1",
+      "_id": "4550ee3bc101cb48e1dda94c",
+      "createdAt": "2026-10-05T14:51:05.945Z",
+      "updatedAt": "2026-10-05T14:51:05.945Z"
+    },
+    {
+      "inventory": "64b7f00000000000000001001",
+      "project": "64b7f00000000000000000b01",
+      "warehouse": "",
+      "type": "stock_in",
+      "quantity": 3,
+      "remarks": "Return: Leftover",
+      "balanceAfter": 343,
+      "createdBy": "64b7f00000000000000000a1",
+      "_id": "2fa238b6a208f0a6d27dcdaa",
+      "createdAt": "2026-10-05T14:51:05.964Z",
+      "updatedAt": "2026-10-05T14:51:05.964Z"
+    },
+    {
+      "inventory": "64b7f00000000000000001001",
+      "project": "64b7f00000000000000000b01",
+      "warehouse": "",
+      "type": "stock_out",
+      "quantity": 2,
+      "remarks": "Adjustment: Damaged",
+      "balanceAfter": 341,
+      "createdBy": "64b7f00000000000000000a1",
+      "_id": "65e64e8a515cfa4aca277db2",
+      "createdAt": "2026-10-05T14:51:05.992Z",
+      "updatedAt": "2026-10-05T14:51:05.992Z"
+    }
+  ],
+  "materialRequests": [
+    {
+      "_id": "64b7f00000000000000001201",
+      "requestNo": "MR-0001",
+      "project": "64b7f00000000000000000b01",
+      "requestedBy": "64b7f00000000000000000a6",
+      "items": [
+        {
+          "inventory": "64b7f00000000000000001001",
+          "quantity": 150
+        }
+      ],
+      "status": "issued",
+      "remarks": "Needed for slab work",
+      "approvedBy": "64b7f00000000000000000a5",
+      "issuedBy": "64b7f00000000000000000a4",
+      "issuedAt": "2026-10-01T10:00:00.000Z",
+      "createdAt": "2026-09-28T10:00:00.000Z",
+      "updatedAt": "2026-10-01T10:00:00.000Z"
+    },
+    {
+      "_id": "64b7f00000000000000001202",
+      "requestNo": "MR-0002",
+      "project": "64b7f00000000000000000b01",
+      "requestedBy": "64b7f00000000000000000a6",
+      "items": [
+        {
+          "inventory": "64b7f00000000000000001002",
+          "quantity": 5
+        }
+      ],
+      "status": "approved",
+      "remarks": "Beam reinforcement",
+      "approvedBy": "64b7f00000000000000000a5",
+      "createdAt": "2026-10-02T10:00:00.000Z",
+      "updatedAt": "2026-10-02T12:00:00.000Z"
+    },
+    {
+      "_id": "64b7f00000000000000001203",
+      "requestNo": "MR-0003",
+      "project": "64b7f00000000000000000b02",
+      "requestedBy": "64b7f00000000000000000a6",
+      "items": [
+        {
+          "inventory": "64b7f00000000000000001003",
+          "quantity": 10
+        }
+      ],
+      "status": "pending",
+      "remarks": "Floor work",
+      "createdAt": "2026-10-03T10:00:00.000Z",
+      "updatedAt": "2026-10-03T10:00:00.000Z"
+    }
+  ],
+  "materialIssues": [
+    {
+      "_id": "64b7f00000000000000001301",
+      "issueNo": "MI-0001",
+      "request": "64b7f00000000000000001201",
+      "project": "64b7f00000000000000000b01",
+      "issuedBy": "64b7f00000000000000000a4",
+      "items": [
+        {
+          "inventory": "64b7f00000000000000001001",
+          "quantity": 150
+        }
+      ],
+      "remarks": "Issued to site",
+      "createdAt": "2026-10-01T10:00:00.000Z",
+      "updatedAt": "2026-10-01T10:00:00.000Z"
+    }
+  ],
+  "attendance": [
+    {
+      "_id": "64b7f00000000000000001401",
+      "employee": "64b7f00000000000000000c01",
+      "date": "2026-10-05",
+      "status": "present",
+      "overtimeHours": 2,
+      "markedBy": "64b7f00000000000000000a2",
+      "project": "64b7f00000000000000000b01",
+      "createdAt": "2026-10-05T09:00:00.000Z",
+      "updatedAt": "2026-10-05T09:00:00.000Z"
+    },
+    {
+      "_id": "64b7f00000000000000001402",
+      "employee": "64b7f00000000000000000c02",
+      "date": "2026-10-05",
+      "status": "present",
+      "overtimeHours": 0,
+      "markedBy": "64b7f00000000000000000a2",
+      "project": "64b7f00000000000000000b02",
+      "createdAt": "2026-10-05T09:05:00.000Z",
+      "updatedAt": "2026-10-05T09:05:00.000Z"
+    },
+    {
+      "_id": "64b7f00000000000000001403",
+      "employee": "64b7f00000000000000000c03",
+      "date": "2026-10-05",
+      "status": "half_day",
+      "overtimeHours": 0,
+      "markedBy": "64b7f00000000000000000a2",
+      "project": "64b7f00000000000000000b01",
+      "createdAt": "2026-10-05T09:10:00.000Z",
+      "updatedAt": "2026-10-05T09:10:00.000Z"
+    },
+    {
+      "_id": "64b7f00000000000000001404",
+      "employee": "64b7f00000000000000000c01",
+      "date": "2026-10-04",
+      "status": "present",
+      "overtimeHours": 0,
+      "markedBy": "64b7f00000000000000000a2",
+      "project": "64b7f00000000000000000b01",
+      "createdAt": "2026-10-04T09:00:00.000Z",
+      "updatedAt": "2026-10-04T09:00:00.000Z"
+    }
+  ],
+  "expenses": [
+    {
+      "_id": "64b7f00000000000000001501",
+      "expenseNo": "EXP-0001",
+      "project": "64b7f00000000000000000b01",
+      "category": "labour",
+      "amount": 120000,
+      "description": "Weekly labour wages",
+      "paymentMethod": "cash",
+      "expenseDate": "2026-10-02T00:00:00.000Z",
+      "createdBy": "64b7f00000000000000000a3",
+      "createdAt": "2026-10-02T10:00:00.000Z",
+      "updatedAt": "2026-10-02T10:00:00.000Z"
+    },
+    {
+      "_id": "64b7f00000000000000001502",
+      "expenseNo": "EXP-0002",
+      "project": "64b7f00000000000000000b02",
+      "category": "fuel",
+      "amount": 45000,
+      "description": "Generator fuel",
+      "paymentMethod": "bank",
+      "expenseDate": "2026-10-03T00:00:00.000Z",
+      "createdBy": "64b7f00000000000000000a3",
+      "createdAt": "2026-10-03T10:00:00.000Z",
+      "updatedAt": "2026-10-03T10:00:00.000Z"
+    },
+    {
+      "_id": "64b7f00000000000000001503",
+      "expenseNo": "EXP-0003",
+      "project": "64b7f00000000000000000b01",
+      "category": "maintenance",
+      "amount": 30000,
+      "description": "Excavator maintenance",
+      "paymentMethod": "cheque",
+      "expenseDate": "2026-09-28T00:00:00.000Z",
+      "createdBy": "64b7f00000000000000000a3",
+      "createdAt": "2026-09-28T10:00:00.000Z",
+      "updatedAt": "2026-09-28T10:00:00.000Z"
+    }
+  ],
+  "clients": [
+    {
+      "_id": "64b7f00000000000000002001",
+      "clientCode": "CLI-0001",
+      "name": "Green Homes Developers",
+      "contactPerson": "Faisal Iqbal",
+      "phone": "0300-5551112",
+      "email": "info@greenhomes.pk",
+      "address": "Lahore",
+      "taxNo": "NTN-1234567",
+      "status": "active",
+      "notes": "Key account client",
+      "createdAt": "2026-08-01T10:00:00.000Z",
+      "updatedAt": "2026-08-01T10:00:00.000Z",
+      "paymentTerms": "",
+      "taxInformation": "NTN-1234567"
+    },
+    {
+      "name": "BuildMaster Co",
+      "email": "info@buildmaster.pk",
+      "taxInformation": "NTN-9988776",
+      "paymentTerms": "Net 30",
+      "clientCode": "CLI-0002",
+      "status": "active",
+      "notes": "",
+      "_id": "bffbcca86e3c015bf51fd87f",
+      "createdAt": "2026-10-05T14:26:19.480Z",
+      "updatedAt": "2026-10-05T14:26:19.480Z"
+    }
+  ],
+  "contracts": [
+    {
+      "_id": "64b7f00000000000000003001",
+      "contractNo": "CTR-0001",
+      "type": "client",
+      "client": "64b7f00000000000000002001",
+      "project": "64b7f00000000000000000b01",
+      "value": 48000000,
+      "retentionPercent": 5,
+      "startDate": "2026-08-01",
+      "endDate": "2027-08-01",
+      "status": "active",
+      "terms": "Standard FIDIC terms",
+      "createdAt": "2026-08-01T10:00:00.000Z",
+      "updatedAt": "2026-08-01T10:00:00.000Z",
+      "title": "Primary Contract",
+      "advancePercentage": 0,
+      "paymentTerms": "",
+      "tax": 0,
+      "approvedVariations": 0,
+      "documents": [],
+      "notes": ""
+    },
+    {
+      "client": "64b7f00000000000000002001",
+      "project": "64b7f00000000000000000b02",
+      "title": "Mall Structure",
+      "value": 75000000,
+      "retentionPercent": 5,
+      "advancePercentage": 20,
+      "paymentTerms": "Monthly",
+      "tax": 18,
+      "approvedVariations": 500000,
+      "status": "active",
+      "contractNo": "CTR-0002",
+      "type": "client",
+      "documents": [],
+      "_id": "3e54276145347db033dd9494",
+      "createdAt": "2026-10-05T14:26:19.487Z",
+      "updatedAt": "2026-10-05T14:26:19.487Z"
+    }
+  ],
+  "activities": [
+    {
+      "project": "64b7f00000000000000000b01",
+      "title": "Excavation",
+      "phase": "Earthwork",
+      "status": "in_progress",
+      "progress": 70,
+      "_id": "1e6dac88439814c90a3dfc36",
+      "createdAt": "2026-10-05T13:59:23.077Z",
+      "updatedAt": "2026-10-05T14:10:21.329Z",
+      "name": "Excavation",
+      "activityCode": "FC36",
+      "wbsCode": "",
+      "category": "",
+      "plannedPercentage": 40,
+      "actualPercentage": 70,
+      "plannedQuantity": 0,
+      "completedQuantity": 0,
+      "unit": "",
+      "weight": 0,
+      "plannedStart": "",
+      "plannedEnd": "",
+      "actualStart": "2026-10-05T14:10:21.317Z",
+      "actualEnd": null,
+      "responsible": null,
+      "remarks": ""
+    },
+    {
+      "project": "64b7f00000000000000000b01",
+      "name": "Concrete Pour",
+      "wbsCode": "WBS-1.2",
+      "category": "Structural",
+      "plannedStart": "2026-10-01",
+      "plannedEnd": "2026-10-10",
+      "plannedQuantity": 100,
+      "unit": "m3",
+      "plannedPercentage": 50,
+      "actualPercentage": 55,
+      "status": "in_progress",
+      "weight": 2,
+      "activityCode": "ACT-0002",
+      "title": "Concrete Pour",
+      "progress": 55,
+      "completedQuantity": 55,
+      "_id": "29f476705b740f74d6aa4d42",
+      "createdAt": "2026-10-05T14:07:38.353Z",
+      "updatedAt": "2026-10-05T14:07:38.389Z",
+      "actualStart": "2026-10-05T14:07:38.382Z"
+    }
+  ],
+  "progressReports": [
+    {
+      "project": "64b7f00000000000000000b01",
+      "percentComplete": 40,
+      "summary": "Foundation completed",
+      "date": "2026-10-05T13:59:23.094Z",
+      "reportedBy": "64b7f00000000000000000a1",
+      "_id": "2602228b45e0c3c5ba67cad8",
+      "createdAt": "2026-10-05T13:59:23.094Z",
+      "updatedAt": "2026-10-05T13:59:23.094Z"
+    }
+  ],
+  "interimPayments": [
+    {
+      "project": "64b7f00000000000000000b01",
+      "grossAmount": 2000000,
+      "retention": 100000,
+      "description": "Running bill 1",
+      "paymentNo": "IB-0001",
+      "netAmount": 1900000,
+      "status": "draft",
+      "_id": "ef4c876842dc1fb5622b5703",
+      "createdAt": "2026-10-05T13:59:23.115Z",
+      "updatedAt": "2026-10-05T13:59:23.115Z",
+      "client": "",
+      "submissionDate": "2026-10-05T13:59:23.115Z",
+      "workCompletedAmount": 2000000,
+      "previousCertifiedAmount": 0,
+      "currentGrossAmount": 2000000,
+      "advanceRecovery": 0,
+      "tax": 0,
+      "otherDeductions": 0,
+      "approvedAmount": 0,
+      "paidAmount": 0,
+      "outstandingAmount": 1900000,
+      "submittedBy": "",
+      "approvedBy": "",
+      "approvalDate": null,
+      "paymentDate": null,
+      "remarks": "Running bill 1",
+      "payments": []
+    },
+    {
+      "project": "64b7f00000000000000000b01",
+      "contract": "64b7f00000000000000003001",
+      "client": "64b7f00000000000000002001",
+      "periodFrom": "2026-10-01",
+      "periodTo": "2026-10-31",
+      "currentGrossAmount": 3000000,
+      "advanceRecovery": 100000,
+      "retention": 150000,
+      "tax": 50000,
+      "otherDeductions": 0,
+      "paymentNo": "IB-0002",
+      "grossAmount": 3000000,
+      "netAmount": 2700000,
+      "outstandingAmount": 1700000,
+      "approvedAmount": 2700000,
+      "paidAmount": 1000000,
+      "submissionDate": "2026-10-05T14:32:13.884Z",
+      "submittedBy": "64b7f00000000000000000a3",
+      "status": "partially_paid",
+      "previousCertifiedAmount": 0,
+      "workCompletedAmount": 0,
+      "payments": [
+        {
+          "amount": 1000000,
+          "date": "2026-10-05T14:32:13.956Z",
+          "by": "64b7f00000000000000000a3"
+        }
+      ],
+      "_id": "f4a4acc6864c6c69f29c9410",
+      "createdAt": "2026-10-05T14:32:13.885Z",
+      "updatedAt": "2026-10-05T14:32:13.956Z",
+      "approvedBy": "64b7f00000000000000000a1",
+      "approvalDate": "2026-10-05T14:32:13.948Z"
+    }
+  ],
+  "documents": [
+    {
+      "project": "64b7f00000000000000000b01",
+      "name": "Foundation Drawing",
+      "category": "drawing",
+      "url": "https://example.com/drawing.pdf",
+      "uploadedBy": "64b7f00000000000000000a1",
+      "_id": "c7996b306da029fcca72f900",
+      "createdAt": "2026-10-05T13:59:23.156Z",
+      "updatedAt": "2026-10-05T13:59:23.156Z"
+    }
+  ],
+  "progressUpdates": [
+    {
+      "project": "64b7f00000000000000000b01",
+      "activity": "29f476705b740f74d6aa4d42",
+      "updateDate": "2026-10-05T14:07:38.382Z",
+      "previousProgress": 30,
+      "newProgress": 55,
+      "quantityCompleted": 55,
+      "remarks": "Half done",
+      "updatedBy": "64b7f00000000000000000a1",
+      "status": "approved",
+      "_id": "eed0e7e91009e1a598238c6f",
+      "createdAt": "2026-10-05T14:07:38.382Z",
+      "updatedAt": "2026-10-05T14:07:38.390Z",
+      "approvedBy": "64b7f00000000000000000a1",
+      "approvedAt": "2026-10-05T14:07:38.390Z"
+    },
+    {
+      "project": "64b7f00000000000000000b01",
+      "activity": "1e6dac88439814c90a3dfc36",
+      "updateDate": "2026-10-05T14:10:21.317Z",
+      "previousProgress": 40,
+      "newProgress": 70,
+      "remarks": "Site update",
+      "updatedBy": "64b7f00000000000000000a6",
+      "status": "approved",
+      "_id": "05b7dc4972675b291405d228",
+      "createdAt": "2026-10-05T14:10:21.317Z",
+      "updatedAt": "2026-10-05T14:10:21.329Z",
+      "approvedBy": "64b7f00000000000000000a1",
+      "approvedAt": "2026-10-05T14:10:21.329Z"
+    }
+  ],
+  "budgets": [
+    {
+      "project": "64b7f00000000000000000b01",
+      "lines": [
+        {
+          "category": "labour",
+          "description": "Masons and labourers",
+          "quantity": 500,
+          "unit": "days",
+          "rate": 2000,
+          "amount": 1000000
+        },
+        {
+          "category": "materials",
+          "description": "Cement and steel",
+          "quantity": 1,
+          "unit": "lot",
+          "rate": 5000000,
+          "amount": 5000000
+        },
+        {
+          "category": "equipment",
+          "description": "Excavator",
+          "quantity": 30,
+          "unit": "days",
+          "rate": 20000,
+          "amount": 600000
+        },
+        {
+          "category": "site_overhead",
+          "description": "Site utilities",
+          "quantity": 1,
+          "unit": "lot",
+          "rate": 300000,
+          "amount": 300000
+        }
+      ],
+      "budgetCode": "BUD-0001",
+      "totalBudget": 6900000,
+      "approvedBy": "64b7f00000000000000000a1",
+      "approvedDate": "2026-10-05T14:16:54.802Z",
+      "status": "active",
+      "version": 1,
+      "_id": "5a9119ce487739737f4169b2",
+      "createdAt": "2026-10-05T14:16:54.803Z",
+      "updatedAt": "2026-10-05T14:16:54.813Z"
+    }
+  ],
+  "rfqs": [
+    {
+      "project": "64b7f00000000000000000b01",
+      "dueDate": "2026-10-20",
+      "items": [
+        {
+          "materialName": "Cement",
+          "quantity": 200,
+          "unit": "bags"
+        },
+        {
+          "materialName": "Sand",
+          "quantity": 50,
+          "unit": "tons"
+        }
+      ],
+      "rfqNo": "RFQ-0001",
+      "createdBy": "64b7f00000000000000000a1",
+      "status": "awarded",
+      "_id": "b57757930e6da45ff03dda79",
+      "createdAt": "2026-10-05T14:40:39.714Z",
+      "updatedAt": "2026-10-05T18:48:20.514Z"
+    },
+    {
+      "project": "",
+      "dueDate": "",
+      "remarks": "",
+      "items": [
+        {
+          "materialName": "Cement",
+          "quantity": 200,
+          "unit": "bags"
+        },
+        {
+          "materialName": "Sand",
+          "quantity": 50,
+          "unit": "tons"
+        }
+      ],
+      "rfqNo": "RFQ-0002",
+      "createdBy": "64b7f00000000000000000a1",
+      "status": "open",
+      "_id": "28bf7ae7e88b6adfc2b984bd",
+      "createdAt": "2026-10-05T18:49:03.621Z",
+      "updatedAt": "2026-10-05T18:49:03.621Z"
+    }
+  ],
+  "vendorQuotations": [
+    {
+      "vendor": "64b7f00000000000000000d01",
+      "rfq": "b57757930e6da45ff03dda79",
+      "item": "Cement",
+      "quantity": 200,
+      "unitPrice": 1350,
+      "tax": 20000,
+      "discount": 5000,
+      "deliveryTime": "3 days",
+      "validity": "7 days",
+      "quotationNo": "QT-0001",
+      "total": 285000,
+      "status": "selected",
+      "_id": "76756c04f3aead6156ae18be",
+      "createdAt": "2026-10-05T14:40:39.737Z",
+      "updatedAt": "2026-10-05T18:48:20.508Z"
+    },
+    {
+      "vendor": "64b7f00000000000000000d02",
+      "rfq": "b57757930e6da45ff03dda79",
+      "item": "Cement",
+      "quantity": 200,
+      "unitPrice": 1380,
+      "tax": 0,
+      "discount": 0,
+      "deliveryTime": "5 days",
+      "validity": "10 days",
+      "quotationNo": "QT-0002",
+      "total": 276000,
+      "status": "received",
+      "_id": "e60be56c76de927485e293a0",
+      "createdAt": "2026-10-05T14:40:39.744Z",
+      "updatedAt": "2026-10-05T14:40:39.744Z"
+    }
+  ],
+  "warehouses": [
+    {
+      "name": "Main Store",
+      "code": "MS-01",
+      "location": "Lahore HQ",
+      "project": "64b7f00000000000000000b01",
+      "status": "active",
+      "_id": "2e59ece729a5619998636e85",
+      "createdAt": "2026-10-05T14:51:05.899Z",
+      "updatedAt": "2026-10-05T14:51:05.899Z"
+    }
+  ],
+  "stockTransfers": [
+    {
+      "transferNo": "TR-0001",
+      "fromWarehouse": "",
+      "toWarehouse": "2e59ece729a5619998636e85",
+      "inventory": "64b7f00000000000000001001",
+      "project": "64b7f00000000000000000b01",
+      "quantity": 10,
+      "remarks": "Move to site store",
+      "createdBy": "64b7f00000000000000000a1",
+      "status": "completed",
+      "_id": "4ad62858ae83f47ac71187ed",
+      "createdAt": "2026-10-05T14:51:05.946Z",
+      "updatedAt": "2026-10-05T14:51:05.946Z"
+    }
+  ],
+  "stockAdjustments": [
+    {
+      "adjustmentNo": "ADJ-0001",
+      "inventory": "64b7f00000000000000001001",
+      "quantity": -2,
+      "reason": "Damaged",
+      "status": "approved",
+      "createdBy": "64b7f00000000000000000a1",
+      "_id": "8c1afef92fd41452279c970d",
+      "createdAt": "2026-10-05T14:51:05.981Z",
+      "updatedAt": "2026-10-05T14:51:05.994Z",
+      "approvedBy": "64b7f00000000000000000a1"
+    }
+  ],
+  "materialReturns": [
+    {
+      "returnNo": "RET-0001",
+      "inventory": "64b7f00000000000000001001",
+      "project": "64b7f00000000000000000b01",
+      "quantity": 3,
+      "reason": "Leftover",
+      "createdBy": "64b7f00000000000000000a1",
+      "_id": "87a3879aad29ce37301bfc14",
+      "createdAt": "2026-10-05T14:51:05.966Z",
+      "updatedAt": "2026-10-05T14:51:05.966Z"
+    }
+  ],
+  "dailyReports": [],
+  "departments": [],
+  "designations": [],
+  "leaveRequests": [],
+  "salaryStructures": [],
+  "payrollPeriods": [],
+  "payrollEntries": [],
+  "permissionPolicies": [],
+  "accountCategories": [
+    {
+      "name": "Current Assets",
+      "code": "CA",
+      "type": "asset",
+      "description": "Assets expected to be converted to cash within one year",
+      "isActive": true,
+      "_id": "a0a92dd58247c527becf17fc",
+      "createdAt": "2026-10-05T19:36:45.545Z",
+      "updatedAt": "2026-10-05T19:36:45.545Z"
+    },
+    {
+      "name": "Fixed Assets",
+      "code": "FA",
+      "type": "asset",
+      "description": "Long-term tangible assets",
+      "isActive": true,
+      "_id": "6b5f33d2b9e9cc714736dc9f",
+      "createdAt": "2026-10-05T19:36:45.549Z",
+      "updatedAt": "2026-10-05T19:36:45.549Z"
+    },
+    {
+      "name": "Current Liabilities",
+      "code": "CL",
+      "type": "liability",
+      "description": "Obligations due within one year",
+      "isActive": true,
+      "_id": "595e06e98e828583d6c22503",
+      "createdAt": "2026-10-05T19:36:45.550Z",
+      "updatedAt": "2026-10-05T19:36:45.550Z"
+    },
+    {
+      "name": "Long-term Liabilities",
+      "code": "LTL",
+      "type": "liability",
+      "description": "Obligations due after one year",
+      "isActive": true,
+      "_id": "a2e2d5e6c459ffa2cfdf17fa",
+      "createdAt": "2026-10-05T19:36:45.552Z",
+      "updatedAt": "2026-10-05T19:36:45.552Z"
+    },
+    {
+      "name": "Owner's Equity",
+      "code": "OE",
+      "type": "equity",
+      "description": "Owner's stake in the business",
+      "isActive": true,
+      "_id": "43329dd32f38448cb992e3be",
+      "createdAt": "2026-10-05T19:36:45.554Z",
+      "updatedAt": "2026-10-05T19:36:45.554Z"
+    },
+    {
+      "name": "Revenue",
+      "code": "REV",
+      "type": "revenue",
+      "description": "Income from business operations",
+      "isActive": true,
+      "_id": "fa58194ebfea4343b76cb7ea",
+      "createdAt": "2026-10-05T19:36:45.556Z",
+      "updatedAt": "2026-10-05T19:36:45.556Z"
+    },
+    {
+      "name": "Cost of Goods Sold",
+      "code": "COGS",
+      "type": "expense",
+      "description": "Direct costs of producing goods",
+      "isActive": true,
+      "_id": "845e57756cbe39136ccd0f3c",
+      "createdAt": "2026-10-05T19:36:45.557Z",
+      "updatedAt": "2026-10-05T19:36:45.557Z"
+    },
+    {
+      "name": "Operating Expenses",
+      "code": "OPEX",
+      "type": "expense",
+      "description": "Day-to-day business expenses",
+      "isActive": true,
+      "_id": "c0143d307c105b9622f12e28",
+      "createdAt": "2026-10-05T19:36:45.559Z",
+      "updatedAt": "2026-10-05T19:36:45.559Z"
+    },
+    {
+      "name": "Payroll Expenses",
+      "code": "PAY",
+      "type": "expense",
+      "description": "Employee salaries and wages",
+      "isActive": true,
+      "_id": "81ff4a3776978346c75a4909",
+      "createdAt": "2026-10-05T19:36:45.560Z",
+      "updatedAt": "2026-10-05T19:36:45.560Z"
+    },
+    {
+      "name": "Project Costs",
+      "code": "PROJ",
+      "type": "expense",
+      "description": "Direct project-related costs",
+      "isActive": true,
+      "_id": "8a550facffb84257c2cbf62b",
+      "createdAt": "2026-10-05T19:36:45.562Z",
+      "updatedAt": "2026-10-05T19:36:45.562Z"
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Cash on Hand",
+      "code": "1001",
+      "category": "a0a92dd58247c527becf17fc",
+      "type": "asset",
+      "openingBalance": 0,
+      "description": "Physical cash",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "3b3e99fd2e6eb3a6d7dfd063",
+      "createdAt": "2026-10-05T19:36:45.564Z",
+      "updatedAt": "2026-10-05T19:36:45.564Z"
+    },
+    {
+      "name": "Bank Account",
+      "code": "1002",
+      "category": "a0a92dd58247c527becf17fc",
+      "type": "asset",
+      "openingBalance": 0,
+      "description": "Primary bank account",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "c1cfe06556c455e00e7d233f",
+      "createdAt": "2026-10-05T19:36:45.565Z",
+      "updatedAt": "2026-10-05T19:36:45.565Z"
+    },
+    {
+      "name": "Accounts Receivable",
+      "code": "1003",
+      "category": "a0a92dd58247c527becf17fc",
+      "type": "asset",
+      "openingBalance": 0,
+      "description": "Money owed by customers",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "f0607aa0ac4e1f7f131acd8c",
+      "createdAt": "2026-10-05T19:36:45.567Z",
+      "updatedAt": "2026-10-05T19:36:45.567Z"
+    },
+    {
+      "name": "Inventory",
+      "code": "1004",
+      "category": "a0a92dd58247c527becf17fc",
+      "type": "asset",
+      "openingBalance": 0,
+      "description": "Materials and supplies",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "bcf5f7b05096bc5200e7b8d4",
+      "createdAt": "2026-10-05T19:36:45.569Z",
+      "updatedAt": "2026-10-05T19:36:45.569Z"
+    },
+    {
+      "name": "Equipment",
+      "code": "1501",
+      "category": "6b5f33d2b9e9cc714736dc9f",
+      "type": "asset",
+      "openingBalance": 0,
+      "description": "Construction equipment",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "7b23dcdcfde2011fe0bce0b0",
+      "createdAt": "2026-10-05T19:36:45.571Z",
+      "updatedAt": "2026-10-05T19:36:45.571Z"
+    },
+    {
+      "name": "Vehicles",
+      "code": "1502",
+      "category": "6b5f33d2b9e9cc714736dc9f",
+      "type": "asset",
+      "openingBalance": 0,
+      "description": "Company vehicles",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "6c2dea5cc4feb4cf6f61cdd4",
+      "createdAt": "2026-10-05T19:36:45.573Z",
+      "updatedAt": "2026-10-05T19:36:45.573Z"
+    },
+    {
+      "name": "Accounts Payable",
+      "code": "2001",
+      "category": "595e06e98e828583d6c22503",
+      "type": "liability",
+      "openingBalance": 0,
+      "description": "Money owed to vendors",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "d691b74bc9b08216a58d8ed9",
+      "createdAt": "2026-10-05T19:36:45.574Z",
+      "updatedAt": "2026-10-05T19:36:45.574Z"
+    },
+    {
+      "name": "VAT Payable",
+      "code": "2002",
+      "category": "595e06e98e828583d6c22503",
+      "type": "liability",
+      "openingBalance": 0,
+      "description": "VAT collected",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "f110bc5c08297d91a66de6f9",
+      "createdAt": "2026-10-05T19:36:45.575Z",
+      "updatedAt": "2026-10-05T19:36:45.575Z"
+    },
+    {
+      "name": "Accrued Expenses",
+      "code": "2003",
+      "category": "595e06e98e828583d6c22503",
+      "type": "liability",
+      "openingBalance": 0,
+      "description": "Expenses incurred but not yet paid",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "d076ec192d60ce567af235de",
+      "createdAt": "2026-10-05T19:36:45.577Z",
+      "updatedAt": "2026-10-05T19:36:45.577Z"
+    },
+    {
+      "name": "Bank Loan",
+      "code": "2501",
+      "category": "a2e2d5e6c459ffa2cfdf17fa",
+      "type": "liability",
+      "openingBalance": 0,
+      "description": "Long-term bank loans",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "be7d82d9d378920ca1dc9d8a",
+      "createdAt": "2026-10-05T19:36:45.578Z",
+      "updatedAt": "2026-10-05T19:36:45.578Z"
+    },
+    {
+      "name": "Owner's Capital",
+      "code": "3001",
+      "category": "43329dd32f38448cb992e3be",
+      "type": "equity",
+      "openingBalance": 0,
+      "description": "Owner's investment",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "8eb0457631f9f5097424f5fe",
+      "createdAt": "2026-10-05T19:36:45.579Z",
+      "updatedAt": "2026-10-05T19:36:45.579Z"
+    },
+    {
+      "name": "Retained Earnings",
+      "code": "3002",
+      "category": "43329dd32f38448cb992e3be",
+      "type": "equity",
+      "openingBalance": 0,
+      "description": "Accumulated profits",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "00d8215806f10a18c3f70e28",
+      "createdAt": "2026-10-05T19:36:45.580Z",
+      "updatedAt": "2026-10-05T19:36:45.580Z"
+    },
+    {
+      "name": "Project Revenue",
+      "code": "4001",
+      "category": "fa58194ebfea4343b76cb7ea",
+      "type": "revenue",
+      "openingBalance": 0,
+      "description": "Revenue from projects",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "8041c0e1352e64d668a067ed",
+      "createdAt": "2026-10-05T19:36:45.581Z",
+      "updatedAt": "2026-10-05T19:36:45.581Z"
+    },
+    {
+      "name": "Interim Payment Revenue",
+      "code": "4002",
+      "category": "fa58194ebfea4343b76cb7ea",
+      "type": "revenue",
+      "openingBalance": 0,
+      "description": "Revenue from interim payments",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "ebefd9ef5e34d7b690184778",
+      "createdAt": "2026-10-05T19:36:45.583Z",
+      "updatedAt": "2026-10-05T19:36:45.583Z"
+    },
+    {
+      "name": "Other Income",
+      "code": "4003",
+      "category": "fa58194ebfea4343b76cb7ea",
+      "type": "revenue",
+      "openingBalance": 0,
+      "description": "Miscellaneous income",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "3087d9f8bce418b5a4bfb3d8",
+      "createdAt": "2026-10-05T19:36:45.584Z",
+      "updatedAt": "2026-10-05T19:36:45.584Z"
+    },
+    {
+      "name": "Material Costs",
+      "code": "5001",
+      "category": "8a550facffb84257c2cbf62b",
+      "type": "expense",
+      "openingBalance": 0,
+      "description": "Construction materials",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "92a98f46641e6349f4f083f0",
+      "createdAt": "2026-10-05T19:36:45.585Z",
+      "updatedAt": "2026-10-05T19:36:45.585Z"
+    },
+    {
+      "name": "Labor Costs",
+      "code": "5002",
+      "category": "8a550facffb84257c2cbf62b",
+      "type": "expense",
+      "openingBalance": 0,
+      "description": "Direct labor",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "ca45d7866d7399002eebfcee",
+      "createdAt": "2026-10-05T19:36:45.587Z",
+      "updatedAt": "2026-10-05T19:36:45.587Z"
+    },
+    {
+      "name": "Subcontractor Costs",
+      "code": "5003",
+      "category": "8a550facffb84257c2cbf62b",
+      "type": "expense",
+      "openingBalance": 0,
+      "description": "Subcontractor payments",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "0dce2c1b5ea751d8235855cd",
+      "createdAt": "2026-10-05T19:36:45.588Z",
+      "updatedAt": "2026-10-05T19:36:45.588Z"
+    },
+    {
+      "name": "Equipment Rental",
+      "code": "5004",
+      "category": "8a550facffb84257c2cbf62b",
+      "type": "expense",
+      "openingBalance": 0,
+      "description": "Equipment rental costs",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "f817a7e974b31aa509d79723",
+      "createdAt": "2026-10-05T19:36:45.589Z",
+      "updatedAt": "2026-10-05T19:36:45.589Z"
+    },
+    {
+      "name": "Salaries & Wages",
+      "code": "6001",
+      "category": "81ff4a3776978346c75a4909",
+      "type": "expense",
+      "openingBalance": 0,
+      "description": "Employee compensation",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "c50bce59e02b83b84a8a97ca",
+      "createdAt": "2026-10-05T19:36:45.591Z",
+      "updatedAt": "2026-10-05T19:36:45.591Z"
+    },
+    {
+      "name": "Office Rent",
+      "code": "6002",
+      "category": "c0143d307c105b9622f12e28",
+      "type": "expense",
+      "openingBalance": 0,
+      "description": "Office space rental",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "343440de94677c157c89580a",
+      "createdAt": "2026-10-05T19:36:45.593Z",
+      "updatedAt": "2026-10-05T19:36:45.593Z"
+    },
+    {
+      "name": "Utilities",
+      "code": "6003",
+      "category": "c0143d307c105b9622f12e28",
+      "type": "expense",
+      "openingBalance": 0,
+      "description": "Electricity, water, etc.",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "de288bf6768b67096aa94f84",
+      "createdAt": "2026-10-05T19:36:45.594Z",
+      "updatedAt": "2026-10-05T19:36:45.594Z"
+    },
+    {
+      "name": "Fuel & Transport",
+      "code": "6004",
+      "category": "c0143d307c105b9622f12e28",
+      "type": "expense",
+      "openingBalance": 0,
+      "description": "Vehicle fuel and transport",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "f1c5ee5c473ea51be41519af",
+      "createdAt": "2026-10-05T19:36:45.596Z",
+      "updatedAt": "2026-10-05T19:36:45.596Z"
+    },
+    {
+      "name": "Insurance",
+      "code": "6005",
+      "category": "c0143d307c105b9622f12e28",
+      "type": "expense",
+      "openingBalance": 0,
+      "description": "Insurance premiums",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "a58ad4548dffcc23dec4576a",
+      "createdAt": "2026-10-05T19:36:45.597Z",
+      "updatedAt": "2026-10-05T19:36:45.597Z"
+    },
+    {
+      "name": "Professional Fees",
+      "code": "6006",
+      "category": "c0143d307c105b9622f12e28",
+      "type": "expense",
+      "openingBalance": 0,
+      "description": "Legal, accounting, etc.",
+      "isActive": true,
+      "currentBalance": 0,
+      "_id": "e5c14e4627150ea2948d697e",
+      "createdAt": "2026-10-05T19:36:45.599Z",
+      "updatedAt": "2026-10-05T19:36:45.599Z"
+    }
+  ],
+  "journalEntries": [],
+  "journalEntryLines": [],
+  "customerPayments": [],
+  "vendorPayments": [],
+  "cashAccounts": [],
+  "bankAccounts": [],
+  "notifications": [
+    {
+      "user": "64b7f00000000000000000a1",
+      "title": "Purchase Order Approved",
+      "message": "Your purchase order PO-0004 has been approved",
+      "type": "success",
+      "project": null,
+      "materialRequest": null,
+      "purchaseOrder": "4d10236a7f569b8eb24b5e16",
+      "grn": null,
+      "interimPayment": null,
+      "expense": null,
+      "leaveRequest": null,
+      "payrollPeriod": null,
+      "inventory": null,
+      "createdBy": "64b7f00000000000000000a1",
+      "isRead": true,
+      "_id": "f43a9ab80207e1e8a85b19ad",
+      "createdAt": "2026-10-05T22:02:57.511Z",
+      "updatedAt": "2026-10-05T22:03:38.813Z"
+    }
+  ]
+}
