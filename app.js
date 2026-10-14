@@ -20,9 +20,21 @@ seedAccounting().catch(console.error);
 |--------------------------------------------------------------------------
 */
 
+const allowedOrigins = [
+   "http://localhost:5173",
+   process.env.FRONTEND_URL,
+   process.env.CLIENT_URL,
+].filter(Boolean);
+
 app.use(
    cors({
-      origin: "http://localhost:5173",
+      origin(origin, callback) {
+         // Allow non-browser clients (no Origin) and configured frontends
+         if (!origin || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+         }
+         return callback(new Error(`CORS blocked for origin: ${origin}`));
+      },
       credentials: true,
    }),
 );

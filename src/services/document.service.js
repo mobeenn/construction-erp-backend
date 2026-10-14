@@ -1,13 +1,9 @@
 const Document = require("../models/Document");
 const fs = require("fs");
-const path = require("path");
+const { ensureUploadDir, resolveUploadUrl } = require("../utils/uploadPaths");
 
-const UPLOAD_BASE = path.join(__dirname, "..", "..", "uploads", "documents");
-
-// Ensure upload directory exists
-if (!fs.existsSync(UPLOAD_BASE)) {
-   fs.mkdirSync(UPLOAD_BASE, { recursive: true });
-}
+// Ensure upload directory exists (uses /tmp on Vercel — never crash boot)
+const UPLOAD_BASE = ensureUploadDir("documents");
 
 /**
  * Map entity type to the corresponding database field
@@ -138,7 +134,7 @@ exports.hardDeleteDocument = async (id, removeFile = false) => {
 
    // Remove file from disk if requested
    if (removeFile && doc.url) {
-      const filePath = path.join(__dirname, "..", "..", doc.url);
+      const filePath = resolveUploadUrl(doc.url);
       try {
          if (fs.existsSync(filePath)) {
             fs.unlinkSync(filePath);
@@ -164,9 +160,7 @@ exports.getDocumentsByEntity = async (entityType, entityId) => {
 /**
  * Get file path for download
  */
-exports.getFilePath = (url) => {
-   return path.join(__dirname, "..", "..", url);
-};
+exports.getFilePath = (url) => resolveUploadUrl(url);
 
 /**
  * Check if file exists

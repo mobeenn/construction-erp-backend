@@ -1,20 +1,13 @@
 const express = require("express");
 const multer = require("multer");
-const fs = require("fs");
 const path = require("path");
 const router = express.Router();
 const protect = require("../middlewares/auth.middleware");
 const authorize = require("../middlewares/role.middleware");
 const controller = require("../controllers/dailyReports/dailyReport.controller");
+const { ensureUploadDir } = require("../utils/uploadPaths");
 
-const uploadDirectory = process.env.VERCEL
-   ? path.join("/tmp", "uploads", "daily-reports")
-   : path.join(__dirname, "..", "..", "uploads", "daily-reports");
-try {
-   fs.mkdirSync(uploadDirectory, { recursive: true });
-} catch (error) {
-   console.error("Upload directory unavailable:", error.message);
-}
+const uploadDirectory = ensureUploadDir("daily-reports");
 const upload = multer({
    storage: multer.diskStorage({
       destination: uploadDirectory,

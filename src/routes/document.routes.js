@@ -1,6 +1,5 @@
 const express = require("express");
 const multer = require("multer");
-const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 
@@ -8,6 +7,7 @@ const router = express.Router();
 
 const protect = require("../middlewares/auth.middleware");
 const authorize = require("../middlewares/role.middleware");
+const { ensureUploadDir } = require("../utils/uploadPaths");
 
 const {
    upload,
@@ -22,16 +22,7 @@ const {
 } = require("../controllers/documents/document.controller");
 
 // Configure multer storage (Vercel only allows writes under /tmp)
-const uploadDirectory = process.env.VERCEL
-   ? path.join("/tmp", "uploads", "documents")
-   : path.join(__dirname, "..", "..", "uploads", "documents");
-try {
-   if (!fs.existsSync(uploadDirectory)) {
-      fs.mkdirSync(uploadDirectory, { recursive: true });
-   }
-} catch (error) {
-   console.error("Upload directory unavailable:", error.message);
-}
+const uploadDirectory = ensureUploadDir("documents");
 
 const storage = multer.diskStorage({
    destination: uploadDirectory,
