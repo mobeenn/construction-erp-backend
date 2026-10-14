@@ -25,25 +25,54 @@ if (shouldSeedOnBoot) {
 |--------------------------------------------------------------------------
 */
 
+const parseOriginList = (value = "") =>
+   String(value)
+      .split(",")
+      .map((s) => s.trim().replace(/\/$/, ""))
+      .filter(Boolean);
+
 const allowedOrigins = [
    "http://localhost:5173",
+   "http://127.0.0.1:5173",
    "https://construction-erp-frontend-six.vercel.app",
-   process.env.FRONTEND_URL,
-   process.env.CLIENT_URL,
-]
-   .filter(Boolean)
-   .map((origin) => origin.replace(/\/$/, ""));
+   ...parseOriginList(process.env.FRONTEND_URL),
+   ...parseOriginList(process.env.CLIENT_URL),
+   ...parseOriginList(process.env.CORS_ORIGINS),
+];
+
+const isAllowedOrigin = (origin) => {
+   if (!origin) return true;
+   const normalized = origin.replace(/\/$/, "");
+   if (allowedOrigins.includes(normalized)) return true;
+   // Vercel preview deployments for this project (e.g. *-git-*-*.vercel.app)
+   try {
+      const { hostname } = new URL(normalized);
+      if (
+         hostname === "construction-erp-frontend-six.vercel.app" ||
+         hostname.endsWith(".construction-erp-frontend-six.vercel.app") ||
+         /^construction-erp-frontend-six([.-].*)?\.vercel\.app$/i.test(hostname)
+      ) {
+         return true;
+      }
+   } catch {
+      /* ignore invalid Origin */
+   }
+   return false;
+};
 
 app.use(
    cors({
       origin(origin, callback) {
-         // Allow non-browser clients (no Origin) and configured frontends
-         if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ""))) {
+         if (isAllowedOrigin(origin)) {
             return callback(null, true);
          }
+         console.warn(`CORS blocked origin: ${origin}`);
          return callback(null, false);
       },
       credentials: true,
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+      optionsSuccessStatus: 204,
    }),
 );
 
