@@ -21,6 +21,7 @@ const db = {
    activities: await fetchAll("activities"),
    employees: await fetchAll("employees"),
    inventory: await fetchAll("inventory"),
+   contracts: await fetchAll("contracts"),
    dailyReports: await fetchAll("dailyReports"),
    documents: await fetchAll("documents"),
    progressUpdates: await fetchAll("progressUpdates"),

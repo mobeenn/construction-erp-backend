@@ -4,6 +4,7 @@ exports.analytics = async (req, res) => {
    try {
       const data = await getAnalytics();
 
+      res.set("Cache-Control", "private, max-age=30");
       res.status(200).json({
          success: true,
          data,

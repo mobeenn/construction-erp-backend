@@ -64,7 +64,10 @@ const humanize = (value) =>
       .replace(/_/g, " ")
       .replace(/\b\w/g, (c) => c.toUpperCase());
 
-exports.getAnalytics = async () => {
+const ANALYTICS_TTL_MS = 45_000;
+let analyticsCache = { at: 0, data: null };
+
+const buildAnalytics = async () => {
    const now = new Date();
    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
    const todayStr = today.toISOString().slice(0, 10);
@@ -383,4 +386,13 @@ exports.getAnalytics = async () => {
          }))
          .slice(0, 6),
    };
+};
+
+exports.getAnalytics = async () => {
+   if (analyticsCache.data && Date.now() - analyticsCache.at < ANALYTICS_TTL_MS) {
+      return analyticsCache.data;
+   }
+   const data = await buildAnalytics();
+   analyticsCache = { at: Date.now(), data };
+   return data;
 };

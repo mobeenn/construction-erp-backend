@@ -136,6 +136,24 @@ const fetchById = async (collection, id) => {
    return attachChildrenToDoc(collection, doc, children[doc._id] || {});
 };
 
+/** Batch fetch by ids — one SELECT + child hydrate (for populate). */
+const fetchByIds = async (collection, ids = []) => {
+   const unique = [...new Set(ids.map(String).filter(Boolean))];
+   if (!unique.length) return {};
+   const schema = getSchema(collection);
+   const r = await query(`SELECT * FROM ${schema.table} WHERE id = ANY($1::text[])`, [unique]);
+   const docs = r.rows.map((row) => parentRowToDoc(collection, row));
+   const children = await loadChildrenForIds(
+      collection,
+      docs.map((d) => d._id),
+   );
+   const map = {};
+   for (const d of docs) {
+      map[d._id] = attachChildrenToDoc(collection, d, children[d._id] || {});
+   }
+   return map;
+};
+
 const writeChildren = async (client, collection, doc) => {
    const schema = getSchema(collection);
    const extracted = extractChildren(collection, doc);
@@ -297,13 +315,7 @@ class Query {
                   .map(String),
             ),
          ];
-         const refMap = {};
-         await Promise.all(
-            ids.map(async (id) => {
-               const target = await fetchById(refCollection, id);
-               if (target) refMap[id] = target;
-            }),
-         );
+         const refMap = await fetchByIds(refCollection, ids);
          for (const doc of docs) {
             const id = doc[path];
             if (!id || typeof id === "object") continue;
@@ -402,6 +414,24 @@ const model = (collection, { defaults = {}, refs = {} } = {}) => {
          return deleteById(collectionName, id);
       },
 
+      async updateMany(filter = {}, update = {}) {
+         const docs = await fetchAll(collectionName);
+         const matched = docs.filter((d) => matchDoc(d, filter));
+         const now = new Date().toISOString();
+         let modified = 0;
+         for (const doc of matched) {
+            const next = {
+               ...doc,
+               ...update,
+               _id: doc._id,
+               updatedAt: now,
+            };
+            await upsertDoc(collectionName, next);
+            modified += 1;
+         }
+         return { matchedCount: matched.length, modifiedCount: modified };
+      },
+
       async countDocuments(filter = {}) {
          // Empty filter: cheap SQL COUNT instead of loading every row into memory
          if (!filter || Object.keys(filter).length === 0) {
@@ -461,9 +491,11 @@ module.exports = {
    COLLECTIONS,
    fetchAll,
    fetchById,
+   fetchByIds,
    upsertDoc,
    deleteById,
    getCollectionCounts,
    tableName,
    coerceValue,
+   query,
 };

@@ -1,6 +1,7 @@
 const Notification = require("../models/Notification");
 const User = require("../models/User");
-const Employee = require("../models/Employee");
+const { query, fetchByIds } = require("../config/pgDb");
+const { parentRowToDoc } = require("../db/relational");
 
 /**
  * Fire-and-forget helper: never let a notification failure
@@ -8,6 +9,63 @@ const Employee = require("../models/Employee");
  */
 const safe = (promise) =>
    promise.catch((err) => console.error("Notification error:", err.message));
+
+const pickFields = (doc, fields) => {
+   if (!fields) return doc;
+   const out = { _id: doc._id };
+   String(fields)
+      .split(/\s+/)
+      .filter(Boolean)
+      .forEach((f) => {
+         if (f in doc) out[f] = doc[f];
+      });
+   return out;
+};
+
+const POPULATE_SPECS = [
+   { path: "project", collection: "projects", select: "name" },
+   { path: "materialRequest", collection: "materialRequests", select: "requestNo" },
+   { path: "purchaseOrder", collection: "purchaseOrders", select: "poNumber" },
+   { path: "grn", collection: "grns", select: "grnNumber" },
+   { path: "interimPayment", collection: "interimPayments", select: "billNo" },
+   { path: "expense", collection: "expenses", select: "expenseNo" },
+   { path: "leaveRequest", collection: "leaveRequests", select: "type" },
+   { path: "payrollPeriod", collection: "payrollPeriods", select: "name" },
+   { path: "inventory", collection: "inventory", select: "materialName" },
+   { path: "createdBy", collection: "users", select: "name" },
+];
+
+const populateNotifications = async (docs) => {
+   for (const spec of POPULATE_SPECS) {
+      const ids = [
+         ...new Set(
+            docs
+               .map((d) => d[spec.path])
+               .filter((id) => id && typeof id !== "object")
+               .map(String),
+         ),
+      ];
+      if (!ids.length) continue;
+      const map = await fetchByIds(spec.collection, ids);
+      for (const doc of docs) {
+         const id = doc[spec.path];
+         if (!id || typeof id === "object") continue;
+         const target = map[String(id)];
+         if (target) doc[spec.path] = pickFields(target, spec.select);
+      }
+   }
+   return docs;
+};
+
+const idOf = (v) => String(v?._id || v || "");
+
+const usersByRoles = async (roles = []) => {
+   const users = await User.find({ isActive: true });
+   return users.filter((u) => roles.includes(u.role)).map((u) => u._id);
+};
+
+const excludeSelf = (ids, userId) =>
+   ids.filter((id) => idOf(id) && idOf(id) !== idOf(userId));
 
 /**
  * Create a notification for a specific user
@@ -61,32 +119,32 @@ exports.createBulkNotifications = async (users, data) => {
 };
 
 /**
- * Get notifications for a specific user
+ * Get notifications for a specific user (SQL WHERE + LIMIT, then batch populate)
  */
 exports.getUserNotifications = async (userId, options = {}) => {
-   const query = { user: userId };
-   if (options.unreadOnly) query.isRead = false;
+   const limit = Math.min(Number(options.limit) || 50, 100);
+   const params = [String(userId)];
+   let sql = `SELECT * FROM notifications WHERE user_id = $1`;
+   if (options.unreadOnly) {
+      sql += ` AND is_read = false`;
+   }
+   sql += ` ORDER BY created_at DESC LIMIT $2`;
+   params.push(limit);
 
-   return await Notification.find(query)
-      .populate("project", "name")
-      .populate("materialRequest", "requestNo")
-      .populate("purchaseOrder", "poNumber")
-      .populate("grn", "grnNumber")
-      .populate("interimPayment", "billNo")
-      .populate("expense", "expenseNo")
-      .populate("leaveRequest", "leaveType")
-      .populate("payrollPeriod", "periodName")
-      .populate("inventory", "materialName")
-      .populate("createdBy", "name")
-      .sort({ createdAt: -1 })
-      .limit(options.limit || 50);
+   const result = await query(sql, params);
+   const docs = result.rows.map((row) => parentRowToDoc("notifications", row));
+   return populateNotifications(docs);
 };
 
 /**
  * Get unread count for a user
  */
 exports.getUnreadCount = async (userId) => {
-   return await Notification.countDocuments({ user: userId, isRead: false });
+   const result = await query(
+      `SELECT COUNT(*)::int AS count FROM notifications WHERE user_id = $1 AND is_read = false`,
+      [String(userId)],
+   );
+   return result.rows[0]?.count || 0;
 };
 
 /**
@@ -101,7 +159,7 @@ exports.markAsRead = async (notificationId, userId) => {
    return await Notification.findByIdAndUpdate(
       notificationId,
       { isRead: true },
-      { new: true }
+      { new: true },
    );
 };
 
@@ -109,10 +167,12 @@ exports.markAsRead = async (notificationId, userId) => {
  * Mark all notifications as read for a user
  */
 exports.markAllAsRead = async (userId) => {
-   return await Notification.updateMany(
-      { user: userId, isRead: false },
-      { isRead: true }
+   const result = await query(
+      `UPDATE notifications SET is_read = true, updated_at = NOW()
+       WHERE user_id = $1 AND is_read = false`,
+      [String(userId)],
    );
+   return { matchedCount: result.rowCount, modifiedCount: result.rowCount };
 };
 
 /**
@@ -127,346 +187,231 @@ exports.deleteNotification = async (notificationId, userId) => {
    return await Notification.findByIdAndDelete(notificationId);
 };
 
-/**
- * Get users by role
- */
-exports.getUsersByRole = async (roles) => {
-   return await User.find({ role: { $in: roles }, isActive: true }).select("_id name email role");
+/* -------------------------------------------------------------------------- */
+/* Domain notify helpers (fire-and-forget from services)                      */
+/* -------------------------------------------------------------------------- */
+
+exports.notifyMaterialRequestSubmitted = async (request, userId) => {
+   const recipients = excludeSelf(
+      await usersByRoles(["admin", "store_manager", "purchase_manager"]),
+      userId,
+   );
+   return safe(
+      exports.createBulkNotifications(recipients, {
+         title: "Material request submitted",
+         message: `${request.requestNo || "Request"} for ${request.project?.name || "a project"} awaits review.`,
+         type: "info",
+         project: idOf(request.project) || null,
+         materialRequest: request._id,
+         createdBy: userId,
+      }),
+   );
 };
 
-/**
- * Get all admin users
- */
-exports.getAdmins = async () => {
-   return await User.find({ role: "admin", isActive: true }).select("_id name email");
+exports.notifyMaterialRequestReviewed = async (request, userId) => {
+   const targets = [];
+   if (request.requestedBy) targets.push(idOf(request.requestedBy));
+   const admins = await usersByRoles(["admin", "store_manager"]);
+   targets.push(...admins.map(idOf));
+   return safe(
+      exports.createBulkNotifications(excludeSelf([...new Set(targets)], userId), {
+         title: `Material request ${request.status}`,
+         message: `${request.requestNo || "Request"} was marked ${request.status}.`,
+         type: request.status === "approved" ? "success" : "warning",
+         project: idOf(request.project) || null,
+         materialRequest: request._id,
+         createdBy: userId,
+      }),
+   );
 };
 
-/**
- * Get all accountant users
- */
-exports.getAccountants = async () => {
-   return await User.find({ role: "accountant", isActive: true }).select("_id name email");
+exports.notifyPORequiresApproval = async (po, userId) => {
+   const recipients = excludeSelf(await usersByRoles(["admin", "purchase_manager"]), userId);
+   return safe(
+      exports.createBulkNotifications(recipients, {
+         title: "Purchase order needs approval",
+         message: `${po.poNumber || "PO"} is ready for approval.`,
+         type: "info",
+         project: idOf(po.project) || null,
+         purchaseOrder: po._id,
+         createdBy: userId,
+      }),
+   );
 };
 
-/**
- * Get all project managers
- */
-exports.getProjectManagers = async () => {
-   return await User.find({ role: "project_manager", isActive: true }).select("_id name email");
+exports.notifyPOReviewed = async (po, userId) => {
+   const targets = [];
+   if (po.createdBy) targets.push(idOf(po.createdBy));
+   targets.push(...(await usersByRoles(["admin", "purchase_manager"])).map(idOf));
+   return safe(
+      exports.createBulkNotifications(excludeSelf([...new Set(targets)], userId), {
+         title: `Purchase order ${po.status}`,
+         message: `${po.poNumber || "PO"} was marked ${po.status}.`,
+         type: po.status === "approved" ? "success" : "warning",
+         project: idOf(po.project) || null,
+         purchaseOrder: po._id,
+         createdBy: userId,
+      }),
+   );
 };
 
-/**
- * Get all purchase managers
- */
-exports.getPurchaseManagers = async () => {
-   return await User.find({ role: "purchase_manager", isActive: true }).select("_id name email");
+exports.notifyGRNCreated = async (grn, userId) => {
+   const recipients = excludeSelf(
+      await usersByRoles(["admin", "store_manager", "purchase_manager"]),
+      userId,
+   );
+   return safe(
+      exports.createBulkNotifications(recipients, {
+         title: "GRN recorded",
+         message: `${grn.grnNumber || "GRN"} was created.`,
+         type: "success",
+         project: idOf(grn.project) || null,
+         grn: grn._id,
+         createdBy: userId,
+      }),
+   );
 };
 
-/**
- * Get all store managers
- */
-exports.getStoreManagers = async () => {
-   return await User.find({ role: "store_manager", isActive: true }).select("_id name email");
+exports.notifyLowInventory = async (inventory, userId) => {
+   const recipients = excludeSelf(await usersByRoles(["admin", "store_manager"]), userId);
+   return safe(
+      exports.createBulkNotifications(recipients, {
+         title: "Low stock alert",
+         message: `${inventory.materialName || "Material"} is at ${inventory.currentStock ?? 0} (min ${inventory.minimumStock ?? inventory.reorderLevel ?? 0}).`,
+         type: "warning",
+         project: idOf(inventory.project) || null,
+         inventory: inventory._id,
+         createdBy: userId,
+      }),
+   );
 };
 
-/**
- * Get all HR users
- */
-exports.getHRUsers = async () => {
-   return await User.find({ role: "hr", isActive: true }).select("_id name email");
+exports.notifyBudgetExceeded = async (project, spent, userId) => {
+   const recipients = excludeSelf(await usersByRoles(["admin", "accountant", "project_manager"]), userId);
+   return safe(
+      exports.createBulkNotifications(recipients, {
+         title: "Project budget exceeded",
+         message: `${project.name || project.projectCode || "Project"} spend reached ${spent}.`,
+         type: "error",
+         project: project._id || project,
+         createdBy: userId,
+      }),
+   );
 };
 
-// ============ EVENT-SPECIFIC NOTIFICATIONS ============
-
-/**
- * Notify when material request is submitted
- */
-exports.notifyMaterialRequestSubmitted = async (request, submittedBy) => {
-   const storeManagers = await exports.getStoreManagers();
-   const admins = await exports.getAdmins();
-   const recipients = [...storeManagers, ...admins].map((u) => u._id);
-
-   return await exports.createBulkNotifications(recipients, {
-      title: "New Material Request",
-      message: `Material request ${request.requestNo} has been submitted for project ${request.project?.name || "N/A"}`,
-      type: "info",
-      materialRequest: request._id,
-      project: request.project?._id || request.project,
-      createdBy: submittedBy,
-   });
+exports.notifyInterimPaymentSubmitted = async (bill, userId) => {
+   const recipients = excludeSelf(await usersByRoles(["admin", "accountant"]), userId);
+   return safe(
+      exports.createBulkNotifications(recipients, {
+         title: "Interim payment submitted",
+         message: `${bill.billNo || "Bill"} for ${bill.project?.name || "project"} was submitted.`,
+         type: "info",
+         project: idOf(bill.project) || null,
+         interimPayment: bill._id,
+         createdBy: userId,
+      }),
+   );
 };
 
-/**
- * Notify when material request is approved/rejected
- */
-exports.notifyMaterialRequestReviewed = async (request, reviewedBy) => {
-   const requester = request.requestedBy;
-   if (!requester) return null;
-
-   const status = request.status === "approved" ? "approved" : "rejected";
-   const type = request.status === "approved" ? "success" : "warning";
-
-   return await exports.createNotification({
-      user: requester,
-      title: `Material Request ${status === "approved" ? "Approved" : "Rejected"}`,
-      message: `Your material request ${request.requestNo} has been ${status}`,
-      type,
-      materialRequest: request._id,
-      project: request.project?._id || request.project,
-      createdBy: reviewedBy,
-   });
+exports.notifyInterimPaymentApproved = async (bill, userId) => {
+   const recipients = excludeSelf(await usersByRoles(["admin", "accountant"]), userId);
+   return safe(
+      exports.createBulkNotifications(recipients, {
+         title: "Interim payment approved",
+         message: `${bill.billNo || "Bill"} was approved.`,
+         type: "success",
+         project: idOf(bill.project) || null,
+         interimPayment: bill._id,
+         createdBy: userId,
+      }),
+   );
 };
 
-/**
- * Notify when PO requires approval
- */
-exports.notifyPORequiresApproval = async (po, submittedBy) => {
-   const admins = await exports.getAdmins();
-   const recipients = admins.map((u) => u._id);
-
-   return await exports.createBulkNotifications(recipients, {
-      title: "PO Requires Approval",
-      message: `Purchase order ${po.poNumber} requires your approval`,
-      type: "warning",
-      purchaseOrder: po._id,
-      project: po.project?._id || po.project,
-      createdBy: submittedBy,
-   });
+exports.notifyPaymentRecorded = async (bill, amount, userId) => {
+   const recipients = excludeSelf(await usersByRoles(["admin", "accountant"]), userId);
+   return safe(
+      exports.createBulkNotifications(recipients, {
+         title: "Payment recorded",
+         message: `Payment of ${amount} recorded against ${bill.billNo || "bill"}.`,
+         type: "success",
+         project: idOf(bill.project) || null,
+         interimPayment: bill._id,
+         createdBy: userId,
+      }),
+   );
 };
 
-/**
- * Notify when PO is approved/rejected
- */
-exports.notifyPOReviewed = async (po, reviewedBy) => {
-   const creator = po.createdBy || po.requestedBy;
-   if (!creator) return null;
-
-   const status = po.status === "approved" ? "approved" : "rejected";
-   const type = po.status === "approved" ? "success" : "warning";
-
-   return await exports.createNotification({
-      user: creator,
-      title: `Purchase Order ${status === "approved" ? "Approved" : "Rejected"}`,
-      message: `Your purchase order ${po.poNumber} has been ${status}`,
-      type,
-      purchaseOrder: po._id,
-      project: po.project?._id || po.project,
-      createdBy: reviewedBy,
-   });
+exports.notifyDailyReportSubmitted = async (report, project, user) => {
+   const recipients = excludeSelf(await usersByRoles(["admin", "project_manager"]), user?._id);
+   if (project?.projectManager) recipients.push(idOf(project.projectManager));
+   return safe(
+      exports.createBulkNotifications([...new Set(excludeSelf(recipients, user?._id))], {
+         title: "Daily report submitted",
+         message: `Site report for ${project?.name || report.project?.name || "project"} is ready for review.`,
+         type: "info",
+         project: idOf(project) || idOf(report.project) || null,
+         createdBy: user?._id,
+      }),
+   );
 };
 
-/**
- * Notify when GRN is created
- */
-exports.notifyGRNCreated = async (grn, createdBy) => {
-   const storeManagers = await exports.getStoreManagers();
-   const admins = await exports.getAdmins();
-   const recipients = [...storeManagers, ...admins].map((u) => u._id);
-
-   return await exports.createBulkNotifications(recipients, {
-      title: "GRN Created",
-      message: `Goods receipt note ${grn.grnNo} has been created`,
-      type: "success",
-      grn: grn._id,
-      project: grn.project?._id || grn.project,
-      createdBy,
-   });
+exports.notifyActivityDelayed = async (activity, project, userId) => {
+   const recipients = excludeSelf(await usersByRoles(["admin", "project_manager"]), userId);
+   return safe(
+      exports.createBulkNotifications(recipients, {
+         title: "Activity delayed",
+         message: `${activity.title || activity.name || "Activity"} on ${project?.name || "project"} is delayed.`,
+         type: "warning",
+         project: idOf(project) || idOf(activity.project) || null,
+         createdBy: userId,
+      }),
+   );
 };
 
-/**
- * Notify when project activity is delayed
- */
-exports.notifyActivityDelayed = async (activity, project, notifiedBy) => {
-   const admins = await exports.getAdmins();
-   const projectManagers = await exports.getProjectManagers();
-   const recipients = [...admins, ...projectManagers].map((u) => u._id);
-
-   return await exports.createBulkNotifications(recipients, {
-      title: "Project Activity Delayed",
-      message: `Activity "${activity.title}" in project ${project?.name || "N/A"} is delayed`,
-      type: "warning",
-      project: project?._id,
-      createdBy: notifiedBy,
-   });
+exports.notifyLeaveSubmitted = async (request, user) => {
+   const recipients = excludeSelf(
+      await usersByRoles(["admin", "hr", "project_manager", "site_supervisor"]),
+      user?._id,
+   );
+   return safe(
+      exports.createBulkNotifications(recipients, {
+         title: "Leave request submitted",
+         message: `${request.employee?.name || "Employee"} requested ${request.days || ""} day(s) leave.`,
+         type: "info",
+         project: idOf(request.project) || null,
+         leaveRequest: request._id,
+         createdBy: user?._id,
+      }),
+   );
 };
 
-/**
- * Notify when project budget exceeds threshold
- */
-exports.notifyBudgetExceeded = async (project, currentCost, notifiedBy) => {
-   const admins = await exports.getAdmins();
-   const accountants = await exports.getAccountants();
-   const recipients = [...admins, ...accountants].map((u) => u._id);
-
-   return await exports.createBulkNotifications(recipients, {
-      title: "Budget Exceeded",
-      message: `Project ${project?.name || "N/A"} has exceeded its budget. Current cost: ${currentCost}`,
-      type: "error",
-      project: project?._id,
-      createdBy: notifiedBy,
-   });
+exports.notifyLeaveReviewed = async (request, userId) => {
+   const targets = [];
+   const emp = request.employee;
+   if (emp?.userAccount) targets.push(idOf(emp.userAccount));
+   if (request.requestedBy) targets.push(idOf(request.requestedBy));
+   targets.push(...(await usersByRoles(["admin", "hr"])).map(idOf));
+   return safe(
+      exports.createBulkNotifications(excludeSelf([...new Set(targets)], userId), {
+         title: `Leave ${request.status}`,
+         message: `Leave request for ${emp?.name || "employee"} is now ${String(request.status).replace(/_/g, " ")}.`,
+         type: request.status === "approved" ? "success" : "warning",
+         project: idOf(request.project) || null,
+         leaveRequest: request._id,
+         createdBy: userId,
+      }),
+   );
 };
 
-/**
- * Notify when interim payment is submitted
- */
-exports.notifyInterimPaymentSubmitted = async (payment, submittedBy) => {
-   const admins = await exports.getAdmins();
-   const accountants = await exports.getAccountants();
-   const recipients = [...admins, ...accountants].map((u) => u._id);
-
-   return await exports.createBulkNotifications(recipients, {
-      title: "Interim Payment Submitted",
-      message: `Interim payment ${payment.paymentNo} has been submitted for approval`,
-      type: "info",
-      interimPayment: payment._id,
-      project: payment.project?._id || payment.project,
-      createdBy: submittedBy,
-   });
-};
-
-/**
- * Notify when interim payment is approved
- */
-exports.notifyInterimPaymentApproved = async (payment, approvedBy) => {
-   const submitter = payment.submittedBy;
-   if (!submitter) return null;
-
-   return await exports.createNotification({
-      user: submitter,
-      title: "Interim Payment Approved",
-      message: `Your interim payment ${payment.paymentNo} has been approved`,
-      type: "success",
-      interimPayment: payment._id,
-      project: payment.project?._id || payment.project,
-      createdBy: approvedBy,
-   });
-};
-
-/**
- * Notify when payment is recorded
- */
-exports.notifyPaymentRecorded = async (payment, amount, recordedBy) => {
-   const admins = await exports.getAdmins();
-   const accountants = await exports.getAccountants();
-   const recipients = [...admins, ...accountants].map((u) => u._id);
-
-   return await exports.createBulkNotifications(recipients, {
-      title: "Payment Recorded",
-      message: `Payment of ${amount} has been recorded for ${payment.paymentNo}`,
-      type: "success",
-      interimPayment: payment._id,
-      project: payment.project?._id || payment.project,
-      createdBy: recordedBy,
-   });
-};
-
-/**
- * Resolve an employee id to the id of the user account
- * linked to that employee (notifications belong to users).
- */
-const resolveEmployeeUser = async (employeeId) => {
-   if (!employeeId) return null;
-   const employee = await Employee.findById(employeeId);
-   return employee?.userAccount || null;
-};
-
-/**
- * Notify when leave is submitted
- */
-exports.notifyLeaveSubmitted = async (leaveRequest, submittedBy) => {
-   const hrs = await exports.getHRUsers();
-   const admins = await exports.getAdmins();
-   const recipients = [...hrs, ...admins].map((u) => u._id);
-
-   const employee = await Employee.findById(leaveRequest.employee);
-
-   return await exports.createBulkNotifications(recipients, {
-      title: "Leave Request Submitted",
-      message: `Leave request from ${employee?.name || submittedBy?.name || "employee"} is pending review`,
-      type: "info",
-      leaveRequest: leaveRequest._id,
-      project: leaveRequest.project?._id || leaveRequest.project,
-      createdBy: submittedBy?._id || submittedBy,
-   });
-};
-
-/**
- * Notify when leave is approved/rejected
- */
-exports.notifyLeaveReviewed = async (leaveRequest, reviewedBy) => {
-   const employeeUser = await resolveEmployeeUser(leaveRequest.employee);
-   if (!employeeUser) return null;
-
-   const status = leaveRequest.status === "approved" ? "approved" : "rejected";
-   const type = leaveRequest.status === "approved" ? "success" : "warning";
-
-   return await exports.createNotification({
-      user: employeeUser,
-      title: `Leave ${status === "approved" ? "Approved" : "Rejected"}`,
-      message: `Your ${leaveRequest.type || ""} leave request (${leaveRequest.days || 0} day(s)) has been ${status}`,
-      type,
-      leaveRequest: leaveRequest._id,
-      project: leaveRequest.project?._id || leaveRequest.project,
-      createdBy: reviewedBy,
-   });
-};
-
-/**
- * Notify when payroll is approved
- */
-exports.notifyPayrollApproved = async (payrollPeriod, approvedBy) => {
-   const admins = await exports.getAdmins();
-   const accountants = await exports.getAccountants();
-   const recipients = [...admins, ...accountants].map((u) => u._id);
-
-   return await exports.createBulkNotifications(recipients, {
-      title: "Payroll Approved",
-      message: `Payroll for period ${payrollPeriod?.name || "N/A"} has been approved`,
-      type: "success",
-      payrollPeriod: payrollPeriod?._id,
-      createdBy: approvedBy,
-   });
-};
-
-/**
- * Notify when low inventory is detected
- */
-exports.notifyLowInventory = async (inventoryItem, notifiedBy) => {
-   const storeManagers = await exports.getStoreManagers();
-   const admins = await exports.getAdmins();
-   const recipients = [...storeManagers, ...admins].map((u) => u._id);
-
-   return await exports.createBulkNotifications(recipients, {
-      title: "Low Inventory Alert",
-      message: `${inventoryItem.materialName} is running low. Current stock: ${inventoryItem.currentStock} ${inventoryItem.unit || "units"}`,
-      type: "warning",
-      inventory: inventoryItem._id,
-      project: inventoryItem.project?._id || inventoryItem.project,
-      createdBy: notifiedBy,
-   });
-};
-
-/**
- * Notify when a site daily report is submitted
- * (project manager + admins)
- */
-exports.notifyDailyReportSubmitted = async (report, project, submittedBy) => {
-   const recipients = [];
-   if (project?.projectManager) recipients.push(project.projectManager);
-   const admins = await exports.getAdmins();
-   admins.forEach((admin) => {
-      if (!recipients.some((r) => String(r) === String(admin._id))) {
-         recipients.push(admin._id);
-      }
-   });
-
-   return await exports.createBulkNotifications(recipients, {
-      title: "Daily Report Submitted",
-      message: `Site daily report for ${project?.name || "N/A"} dated ${String(report.reportDate || "").slice(0, 10)} is pending review`,
-      type: "info",
-      dailyReport: report._id,
-      project: project?._id || project,
-      createdBy: submittedBy?._id || submittedBy,
-   });
+exports.notifyPayrollApproved = async (period, userId) => {
+   const recipients = excludeSelf(await usersByRoles(["admin", "hr", "accountant"]), userId);
+   return safe(
+      exports.createBulkNotifications(recipients, {
+         title: "Payroll approved",
+         message: `${period.periodName || period.name || "Payroll period"} was approved.`,
+         type: "success",
+         payrollPeriod: period._id,
+         createdBy: userId,
+      }),
+   );
 };

@@ -34,7 +34,6 @@ const parseOriginList = (value = "") =>
 const allowedOrigins = [
    "http://localhost:5173",
    "http://127.0.0.1:5173",
-   "https://construction-erp-frontend-six.vercel.app",
    ...parseOriginList(process.env.FRONTEND_URL),
    ...parseOriginList(process.env.CLIENT_URL),
    ...parseOriginList(process.env.CORS_ORIGINS),
@@ -43,21 +42,7 @@ const allowedOrigins = [
 const isAllowedOrigin = (origin) => {
    if (!origin) return true;
    const normalized = origin.replace(/\/$/, "");
-   if (allowedOrigins.includes(normalized)) return true;
-   // Vercel preview deployments for this project (e.g. *-git-*-*.vercel.app)
-   try {
-      const { hostname } = new URL(normalized);
-      if (
-         hostname === "construction-erp-frontend-six.vercel.app" ||
-         hostname.endsWith(".construction-erp-frontend-six.vercel.app") ||
-         /^construction-erp-frontend-six([.-].*)?\.vercel\.app$/i.test(hostname)
-      ) {
-         return true;
-      }
-   } catch {
-      /* ignore invalid Origin */
-   }
-   return false;
+   return allowedOrigins.includes(normalized);
 };
 
 app.use(
