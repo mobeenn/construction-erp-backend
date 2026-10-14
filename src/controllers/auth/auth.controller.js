@@ -12,14 +12,23 @@ const {
 const { updateUserSchema } = require("../../validators/user.validation");
 const { getPolicies } = require("../../middlewares/permission.middleware");
 
-// Register
+// Register (public signup disabled unless ALLOW_PUBLIC_REGISTER=true)
 
 exports.register = async (req, res) => {
    try {
+      if (process.env.ALLOW_PUBLIC_REGISTER !== "true") {
+         return res.status(403).json({
+            success: false,
+            message: "Public registration is disabled. Ask an admin to create your account.",
+         });
+      }
+
       const data = registerSchema.parse(req.body);
+      // Never allow self-serve privileged roles even when registration is enabled
+      const safeData = { ...data, role: "employee" };
 
       const existingUser = await User.findOne({
-         email: data.email,
+         email: safeData.email,
       });
 
       if (existingUser) {
@@ -30,10 +39,10 @@ exports.register = async (req, res) => {
          });
       }
 
-      const hashedPassword = await bcrypt.hash(data.password, 10);
+      const hashedPassword = await bcrypt.hash(safeData.password, 10);
 
       const user = await User.create({
-         ...data,
+         ...safeData,
 
          password: hashedPassword,
       });

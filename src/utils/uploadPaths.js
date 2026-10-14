@@ -39,10 +39,32 @@ function resolveUploadUrl(url = "") {
    return path.join(PROJECT_ROOT, relative);
 }
 
+/**
+ * Resolve a download under a known upload subdirectory, rejecting path traversal.
+ */
+function resolveSafeUploadFile(subdir, fileName) {
+   const base = ensureUploadDir(subdir);
+   const safeName = path.basename(String(fileName || ""));
+   if (!safeName || safeName !== String(fileName || "") || safeName.includes("\0")) {
+      const err = new Error("Invalid file name");
+      err.statusCode = 400;
+      throw err;
+   }
+   const resolved = path.resolve(base, safeName);
+   const relative = path.relative(path.resolve(base), resolved);
+   if (relative.startsWith("..") || path.isAbsolute(relative)) {
+      const err = new Error("Invalid file path");
+      err.statusCode = 400;
+      throw err;
+   }
+   return resolved;
+}
+
 module.exports = {
    isServerless,
    getUploadsRoot,
    getUploadDir,
    ensureUploadDir,
    resolveUploadUrl,
+   resolveSafeUploadFile,
 };

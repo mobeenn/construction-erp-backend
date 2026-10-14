@@ -10,9 +10,14 @@ const app = express();
 
 connectDB();
 
-// Seed accounting data
-const seedAccounting = require("./src/seeds/accounting.seed");
-seedAccounting().catch(console.error);
+// Seed accounting only when explicitly enabled (never on Vercel cold starts by default)
+const shouldSeedOnBoot =
+   process.env.RUN_SEED_ON_BOOT === "true" ||
+   (!process.env.VERCEL && process.env.RUN_SEED_ON_BOOT !== "false");
+if (shouldSeedOnBoot) {
+   const seedAccounting = require("./src/seeds/accounting.seed");
+   seedAccounting().catch(console.error);
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -42,9 +47,18 @@ app.use(
    }),
 );
 
-app.use(express.json());
+// Safe security headers (no strict CSP — avoids breaking charts/fonts)
+app.use((req, res, next) => {
+   res.setHeader("X-Content-Type-Options", "nosniff");
+   res.setHeader("X-Frame-Options", "SAMEORIGIN");
+   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+   res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+   next();
+});
+
+app.use(express.json({ limit: "2mb" }));
 app.use(cookieParser());
-app.use(morgan("dev"));
+app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 
 /*
 |--------------------------------------------------------------------------
@@ -58,14 +72,37 @@ app.get("/", (req, res) => {
       message: "Construction ERP API Running",
    });
 });
-// PostgreSQL status endpoint
-app.get("/db-status", async (req, res) => {
+
+app.get("/api/health", async (req, res) => {
+   const started = Date.now();
+   try {
+      const { query } = require("./src/config/pool");
+      await query("SELECT 1");
+      res.status(200).json({
+         success: true,
+         ok: true,
+         database: "up",
+         ms: Date.now() - started,
+      });
+   } catch (error) {
+      res.status(503).json({
+         success: false,
+         ok: false,
+         database: "down",
+         message: error.message,
+         ms: Date.now() - started,
+      });
+   }
+});
+
+// Heavy DB inventory — admin only (was public DoS / pool burn vector)
+app.get("/db-status", require("./src/middlewares/auth.middleware"), require("./src/middlewares/role.middleware")("admin"), async (req, res) => {
    try {
       const { getCollectionCounts } = require("./src/config/pgDb");
       const collections = await getCollectionCounts();
       res.json({ success: true, database: "postgresql", collections });
    } catch (error) {
-      res.status(500).json({ success: false, message: error.message });
+      res.status(error.statusCode || 500).json({ success: false, message: error.message });
    }
 });
 

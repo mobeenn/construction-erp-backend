@@ -403,6 +403,12 @@ const model = (collection, { defaults = {}, refs = {} } = {}) => {
       },
 
       async countDocuments(filter = {}) {
+         // Empty filter: cheap SQL COUNT instead of loading every row into memory
+         if (!filter || Object.keys(filter).length === 0) {
+            const schema = getSchema(collectionName);
+            const result = await query(`SELECT COUNT(*)::int AS count FROM ${schema.table}`);
+            return result.rows[0].count;
+         }
          const docs = await fetchAll(collectionName);
          return docs.filter((d) => matchDoc(d, filter)).length;
       },

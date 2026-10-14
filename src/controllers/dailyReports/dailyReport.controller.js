@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { dailyReportSchema } = require("../../validators/dailyReport.validation");
 const service = require("../../services/dailyReport.service");
-const { resolveUploadUrl } = require("../../utils/uploadPaths");
+const { resolveSafeUploadFile } = require("../../utils/uploadPaths");
 
 const removeUploadedFiles = (files = []) => files.forEach((file) => {
    try {
@@ -70,10 +70,10 @@ exports.downloadAttachment = async (req, res) => {
       );
       if (!report) return res.status(404).json({ success: false, message: "Attachment not found" });
       const attachment = report.attachments.find((file) => path.basename(file.url) === req.params.fileName);
-      const filePath = resolveUploadUrl(`/uploads/daily-reports/${req.params.fileName}`);
+      const filePath = resolveSafeUploadFile("daily-reports", req.params.fileName);
       if (!fs.existsSync(filePath)) return res.status(404).json({ success: false, message: "Attachment file is missing" });
       return res.download(filePath, attachment.name);
    } catch (error) {
-      return res.status(500).json({ success: false, message: error.message });
+      return res.status(error.statusCode || 500).json({ success: false, message: error.message });
    }
 };
