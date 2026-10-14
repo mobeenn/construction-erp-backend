@@ -22,18 +22,21 @@ seedAccounting().catch(console.error);
 
 const allowedOrigins = [
    "http://localhost:5173",
+   "https://construction-erp-frontend-six.vercel.app",
    process.env.FRONTEND_URL,
    process.env.CLIENT_URL,
-].filter(Boolean);
+]
+   .filter(Boolean)
+   .map((origin) => origin.replace(/\/$/, ""));
 
 app.use(
    cors({
       origin(origin, callback) {
          // Allow non-browser clients (no Origin) and configured frontends
-         if (!origin || allowedOrigins.includes(origin)) {
+         if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ""))) {
             return callback(null, true);
          }
-         return callback(new Error(`CORS blocked for origin: ${origin}`));
+         return callback(null, false);
       },
       credentials: true,
    }),
